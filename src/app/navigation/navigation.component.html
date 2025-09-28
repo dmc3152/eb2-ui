@@ -1,12 +1,11 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #drawer class="sidenav" fixedInViewport autoFocus="false"
       [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-      [mode]="(isHandset$ | async) ? 'over' : 'side'"
-      [opened]="(isHandset$ | async) === false">
+      [mode]="(isHandset$ | async) ? 'over' : 'over'">
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item routerLink="home">Home</a>
-      <a mat-list-item routerLink="interviews">Bishopric Interviews</a>
+      <a mat-list-item (click)="drawer.close()" routerLink="home">Home</a>
+      <a mat-list-item (click)="drawer.close()" routerLink="interviews">Bishopric Interviews</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -19,7 +18,13 @@
         (click)="drawer.toggle()">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
+      <img src="church-logo.png" height="32px" width="32px" class="logo">
+      @if (isHandset$ | async) {
+      <span>EB2 Ward</span>
+      }
+      @else {
       <span>Ewa Beach 2nd Ward</span>
+      }
     </mat-toolbar>
     <div class="content">
       <ng-content></ng-content>
