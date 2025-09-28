@@ -1,0 +1,31 @@
+query AvailabilityBlocks($durationInMinutes: Int!) {
+  allAvailabilityBlocks {
+    start
+    end
+    bishopricMember
+    availableSlot(durationInMinutes: $durationInMinutes) {
+      start
+      end
+    }
+  }
+}
+
+mutation CreateAppointment($input: AppointmentDetails!) {
+  createAppointment(input: $input) {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+
+query AllAppointmentTypes {
+  allAppointmentTypes {
+    code
+    name
+    description
+    durationInMinutes
+    interviewers
+  }
+}

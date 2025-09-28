@@ -1,0 +1,38 @@
+@use '@angular/material' as mat;
+
+.sidenav-container {
+  height: 100%;
+  background-image: url('/background.png');
+  background-repeat: repeat;
+}
+
+.sidenav {
+  width: 250px;
+}
+
+.sidenav .mat-toolbar {
+  background: inherit;
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+}
+
+.menu-button {
+  color: var(--mat-sys-on-primary)
+}
+
+mat-nav-list {
+  @include mat.list-overrides((
+    list-item-label-text-color: var(--mat-sys-on-primary),
+    list-item-hover-label-text-color: var(--mat-sys-primary-fixed-dim)
+  ));
+}

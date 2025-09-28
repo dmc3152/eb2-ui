@@ -1,0 +1,41 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+}
+
+.full-width {
+    width: 100%;
+}
+
+// mat-card {
+//     // background-color: color-mix(in srgb, var(--mat-sys-surface-container-highest) 60%, transparent);
+//     // background-color: rgba(255, 255, 255, 0.6);
+//     // backdrop-filter: blur(4px);
+//     max-width: 500px;
+//     width: 100%;
+// }
+
+.interview-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.hint-margin {
+    margin-bottom: 16px;
+}
+
+.sub-header {
+    font: var(--mat-sys-title-medium);
+}
+
+.loading-spinner {
+    display: flex;
+    justify-content: center;
+}
+
+mat-card-content {
+    margin-top: 16px;
+}
