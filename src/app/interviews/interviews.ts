@@ -62,19 +62,17 @@ export class InterviewsPage {
   });
   isSubmitting = signal(false);
   interviewOptions = toSignal(this.allAppointmentTypesGQL.fetch().pipe(
-    map(response => Array.from(response.data.allAppointmentTypes).sort(this.sortStringFactory("name")))
+    map(response => Array.from(response.data.allAppointmentTypes).sort(this.sortStringFactory("name"))),
+    map(options => {
+      const tithingDeclarationOptionIndex = options.findIndex(item => item.code === 'TITHING_DECLARATION');
+      if (tithingDeclarationOptionIndex > 0) {
+        const [tithingDeclarationOption] = options.splice(tithingDeclarationOptionIndex, 1);
+        options.unshift(tithingDeclarationOption);
+      }
+      return options;
+    })
   ), { initialValue: [] });
   selectedAppointmentType = computed(() => this.interviewOptions().find(option => option.code === this.interviewType()));
-
-  // private availabilityBlockApiCall = this.availabilityBlocksGQL.watch({ durationInMinutes: duration }).valueChanges;
-
-  // getAvailabilityBlocks = (interviewType: string | null) => {
-  //   if (!interviewType) return Promise.resolve(undefined);
-  //   const duration = this.interviewOptions().find(option => option.code === interviewType)?.durationInMinutes;
-  //   if (!duration) return Promise.resolve(undefined);
-  //   return this.availabilityBlocksGQL.fetch({ durationInMinutes: duration });
-  // }
-  
   availabilityResource = rxResource({
     params: () => ({ duration: this.selectedAppointmentType()?.durationInMinutes }),
     stream: ({ params }) => !params.duration ? of(undefined) : this.availabilityBlocksGQL.watch({ durationInMinutes: params.duration }, { fetchPolicy: 'cache-and-network' }).valueChanges,
