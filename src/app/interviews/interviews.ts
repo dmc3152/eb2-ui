@@ -93,7 +93,9 @@ export class InterviewsPage {
       const isValidBishopricMember = this.selectedAppointmentType()!.interviewers.includes(block.bishopricMember);
       if (!isValidBishopricMember) return acc;
 
-      const blockKey = DateTime.fromISO(block.start).toFormat('EEEE, MMMM d');
+      const blockKey = DateTime.fromISO(block.start).startOf('day').toISO();
+      if (!blockKey) return acc;
+
       const existingBlock = acc.get(blockKey);
       if (!existingBlock) {
         acc.set(blockKey, {

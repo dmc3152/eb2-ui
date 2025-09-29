@@ -52,7 +52,7 @@
         <form>
             <mat-selection-list #availabilityBlocksList [formControl]="timeSlotFormControl" name="slots" [multiple]="false">
                 @for (block of availabilityBlocks() | keyvalue; track block.key) {
-                <div mat-subheader class="sub-header">{{block.key}}</div>
+                <div mat-subheader class="sub-header">{{block.key | date: 'EEEE, MMMM d'}}</div>
                     @for (timeSlot of block.value.timeSlots; track timeSlot) {
                     <mat-list-option [value]="timeSlot" togglePosition="before">
                         <span matListItemTitle>{{timeSlot.start | date: 'shortTime'}}</span>
