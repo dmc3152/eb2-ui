@@ -1,0 +1,14 @@
+<mat-card appearance="filled">
+    <mat-card-content>
+        {{message()}}
+    </mat-card-content>
+    <mat-card-actions align="end">
+        @if (logoutSuccess() === true) {
+        <a matButton="text" routerLink="/home">Return to home</a>
+        <a matButton="text" routerLink="../login">Login</a>
+        }
+        @else {
+        <button matButton="filled" (click)="logout()">Logout</button>
+        }
+    </mat-card-actions>
+</mat-card>

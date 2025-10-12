@@ -1,0 +1,10 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+}
+
+mat-card-actions {
+    margin-top: 8px;
+}

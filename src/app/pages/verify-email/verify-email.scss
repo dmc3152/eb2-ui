@@ -1,0 +1,28 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.verify-email-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+// mat-card-content {
+//     margin-top: 16px;
+// }
+
+mat-card-actions {
+    margin-top: 8px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.spacer {
+    display: flex;
+    flex: 1;
+}

@@ -55,7 +55,7 @@
                 <div mat-subheader class="sub-header">{{block.key | date: 'EEEE, MMMM d'}}</div>
                     @for (timeSlot of block.value.timeSlots; track timeSlot) {
                     <mat-list-option [value]="timeSlot" togglePosition="before">
-                        <span matListItemTitle>{{timeSlot.start | date: 'shortTime'}}</span>
+                        <span matListItemTitle>{{timeSlot.start | date: 'h:mm'}}-{{timeSlot.end | date: 'h:mm a'}}</span>
                         <span matListItemLine>{{timeSlot.bishopricMember}}</span>
                     </mat-list-option>
                     }

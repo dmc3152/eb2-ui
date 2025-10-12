@@ -1,0 +1,33 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+mat-card-content {
+    margin-top: 16px;
+}
+
+mat-card-actions {
+    display: flex;
+    margin-top: 8px;
+    justify-content: end;
+    align-items: start;
+    flex-wrap: wrap-reverse;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.spacer {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+}

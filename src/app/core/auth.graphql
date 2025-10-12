@@ -1,0 +1,78 @@
+query Self {
+  self {
+    id
+    name
+    email
+  }
+}
+
+mutation SignUp($input: SignUpDetails!) {
+  signUp(input: $input) {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+
+mutation Login($input: Credentials!) {
+  login(input: $input) {
+    user {
+      id
+      name
+      email
+    }
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+
+mutation Logout {
+  logout {
+    success
+  }
+}
+
+mutation RequestPasswordReset($email: EmailAddress!) {
+  requestPasswordReset(email: $email) {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+
+mutation ResetPassword($input: ResetPasswordDetails!) {
+  resetPassword(input: $input) {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+
+mutation VerifyEmail($email: EmailAddress!, $code: Int!) {
+  verifyEmail(email: $email, code: $code) {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+
+mutation ResendEmailVerification($email: EmailAddress!) {
+  resendEmailVerification(email: $email) {
+    success
+    error {
+      code
+      message
+    }
+  }
+}

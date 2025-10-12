@@ -8,7 +8,9 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import { AuthService } from '../../core/auth';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-navigation',
@@ -21,15 +23,21 @@ import { RouterLink } from '@angular/router';
     MatListModule,
     MatIconModule,
     AsyncPipe,
-    RouterLink
-  ]
+    RouterLink,
+    RouterOutlet,
+    MatTooltipModule
+]
 })
 export class NavigationComponent {
   private breakpointObserver = inject(BreakpointObserver);
+  private _auth = inject(AuthService);
+
+  isAuthenticated = this._auth.isAuthenticated;
+  authenticatedUser = this._auth.authenticatedUser;
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
       map(result => result.matches),
       shareReplay()
-    );
+  );
 }

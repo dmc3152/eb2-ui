@@ -1,0 +1,14 @@
+<mat-toolbar>
+    <a routerLink="/nav/home" class="title-link">
+        <img src="church-logo.png" height="32px" width="32px" class="logo">
+        @if (isHandset$ | async) {
+        <span>EB2 Ward</span>
+        }
+        @else {
+        <span>Ewa Beach 2nd Ward</span>
+        }
+    </a>
+</mat-toolbar>
+<div class="content">
+    <router-outlet></router-outlet>
+</div>

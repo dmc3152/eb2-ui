@@ -1,0 +1,64 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport autoFocus="false"
+      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'over'">
+    <mat-toolbar>Menu</mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item (click)="drawer.close()" routerLink="home">Home</a>
+      <a mat-list-item (click)="drawer.close()" routerLink="interviews">Bishopric Interviews</a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar>
+      <button
+        class="icon-button"
+        type="button"
+        aria-label="Toggle sidenav"
+        matIconButton
+        matTooltip="Menu"
+        color="secondary"
+        (click)="drawer.toggle()">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <a routerLink="/nav/home" class="title-link">
+        <img src="church-logo.png" height="32px" width="32px" class="logo">
+        @if (isHandset$ | async) {
+        <span>EB2 Ward</span>
+        }
+        @else {
+        <span>Ewa Beach 2nd Ward</span>
+        }
+      </a>
+      <span class="spacer"></span>
+      <!-- @if (isHandset$ | async) {
+        @if (isAuthenticated()) {
+          <button routerLink="/auth/logout" matIconButton class="icon-button" matTooltip="Logout">
+            <mat-icon>logout</mat-icon>
+          </button>
+        }
+        @else {
+          <a routerLink="/auth/login" matIconButton class="icon-button" matTooltip="Login">
+            <mat-icon>login</mat-icon>
+          </a>
+        }
+      }
+      @else {
+        @if (isAuthenticated()) {
+          <a routerLink="/auth/logout" matButton>
+            <mat-icon>logout</mat-icon>
+            Logout
+          </a>
+        }
+        @else {
+          <a routerLink="/auth/login" matButton>
+            <mat-icon>login</mat-icon>
+            Login
+          </a>
+        }
+      } -->
+    </mat-toolbar>
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

@@ -1,0 +1,22 @@
+<mat-card appearance="filled">
+    <mat-card-header>
+        <mat-card-title>Appointment Set Successfully</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <p>Here are your appointment details:</p>
+        @let appointment = interviewData();
+        @if (appointment.type) {
+        <b>Appointment Type:</b> {{appointment.type}}<br>
+        }
+        @if (appointment.start && appointment.end) {
+        <b>Time:</b> {{appointment.start}}-{{appointment.end}}<br>
+        }
+        @if (appointment.bishopricMember) {
+        <b>Bishopric Member:</b> {{appointment.bishopricMember}}<br>
+        }
+    </mat-card-content>
+    <mat-card-actions align="end">
+        <a matButton routerLink="../home">Return to home</a>
+        <a matButton routerLink="../interviews">Schedule another interview</a>
+    </mat-card-actions>
+</mat-card>

@@ -16,6 +16,7 @@
     "module": "preserve",
     "lib": ["ES2022", "esnext.asynciterable", "DOM"],
     "allowSyntheticDefaultImports": true,
+    "composite": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
@@ -32,5 +33,8 @@
     {
       "path": "./tsconfig.spec.json"
     }
+  ],
+  "include": [
+    "src/**/*"
   ]
 }

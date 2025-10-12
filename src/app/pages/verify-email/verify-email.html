@@ -1,0 +1,33 @@
+<mat-card appearance="filled">
+    <mat-card-header>
+        <mat-card-title>Verify Email</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <p>
+            Enter the code from your email to verify your email address.
+        </p>
+        <form [formGroup]="verifyEmailForm" class="verify-email-form">
+            <mat-form-field class="full-width" subscriptSizing="dynamic">
+                <mat-label>Code</mat-label>
+                <input matInput matNativeControl type="number" min="100000" max="999999" step="1" formControlName="code" placeholder="123456">
+                @if (verifyEmailForm.controls.code.hasError('required')) {
+                <mat-error>Code is required</mat-error>
+                }
+            </mat-form-field>
+
+            <mat-form-field class="full-width" subscriptSizing="dynamic">
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email" placeholder="Ex. jdoe@example.com">
+                @if (verifyEmailForm.controls.email.hasError('required')) {
+                <mat-error>Email is required</mat-error>
+                }
+            </mat-form-field>
+        </form>
+    </mat-card-content>
+    <mat-card-actions align="end">
+        <a matButton="text" routerLink="../login">Login</a>
+        <a matButton="text" routerLink="../resendEmail">Resend Code</a>
+        <span class="spacer"></span>
+        <button matButton="filled" [disabled]="verifyEmailForm.invalid" (click)="verifyEmail()">Verify Email</button>
+    </mat-card-actions>
+</mat-card>

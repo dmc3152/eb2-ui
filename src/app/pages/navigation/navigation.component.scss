@@ -30,8 +30,8 @@
   padding: 16px;
 }
 
-.menu-button {
-  color: var(--mat-sys-on-primary)
+.icon-button {
+  color: var(--mat-sys-on-primary);
 }
 
 mat-nav-list {
@@ -39,4 +39,21 @@ mat-nav-list {
     list-item-label-text-color: var(--mat-sys-on-primary),
     list-item-hover-label-text-color: var(--mat-sys-primary-fixed-dim)
   ));
+}
+
+.spacer {
+  flex: 1;
+}
+
+.title-link {
+  color: var(--mat-sys-on-primary);
+  text-decoration-line: none;
+  display: flex;
+  align-items: center;
+}
+
+mat-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }

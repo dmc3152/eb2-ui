@@ -1,18 +1,19 @@
-import { Component, computed, inject, resource, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { AllAppointmentTypesGQL, AppointmentCode, AvailabilityBlocksGQL, BishopricMember, CreateAppointmentGQL } from '../../../graphql/generated';
+import { AllAppointmentTypesGQL, AppointmentCode, AppointmentDetails, AvailabilityBlocksGQL, BishopricMember, CreateAppointmentGQL } from '../../../../graphql/generated';
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
-import { firstValueFrom, map, of, tap } from 'rxjs';
+import { map, of, tap } from 'rxjs';
 import { DatePipe, KeyValuePipe } from '@angular/common';
 import { MatListModule } from '@angular/material/list';
 import { DateTime } from 'luxon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router } from '@angular/router';
 
 export interface AvailabilityBlockDisplay {
   start: string;
@@ -22,6 +23,13 @@ export interface AvailabilityBlockDisplay {
     start: string;
     end: string;
   }[];
+}
+
+export interface ConfirmedAppointmentDetails {
+  bishopricMember: string
+  type: string
+  start: string
+  end: string
 }
 
 @Component({
@@ -46,6 +54,9 @@ export class InterviewsPage {
   private availabilityBlocksGQL = inject(AvailabilityBlocksGQL);
   private createAppointmentGQL = inject(CreateAppointmentGQL);
   private _snackBar = inject(MatSnackBar);
+  private _route = inject(ActivatedRoute);
+  private _router = inject(Router);
+
   private sortStringFactory = <T extends object>(field: keyof T): (a: T, b: T) => number => (a, b) => (a[field] as string || '').localeCompare(b[field] as string || '', undefined, { sensitivity: 'base', numeric: true })
   interviewForm = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -72,7 +83,7 @@ export class InterviewsPage {
       return options;
     })
   ), { initialValue: [] });
-  selectedAppointmentType = computed(() => this.interviewOptions().find(option => option.code === this.interviewType()));
+  selectedAppointmentType = computed(() => this.findInterviewOption(this.interviewType()));
   availabilityResource = rxResource({
     params: () => ({ duration: this.selectedAppointmentType()?.durationInMinutes }),
     stream: ({ params }) => !params.duration ? of(undefined) : this.availabilityBlocksGQL.watch({ durationInMinutes: params.duration }, { fetchPolicy: 'cache-and-network' }).valueChanges,
@@ -90,8 +101,11 @@ export class InterviewsPage {
 
     const availabilities = this.availabilityResource.value().data.allAvailabilityBlocks.reduce((acc, block) => {
       if (!block.bishopricMember || !block.availableSlot?.start || !block.availableSlot.end) return acc;
+
       const isValidBishopricMember = this.selectedAppointmentType()!.interviewers.includes(block.bishopricMember);
       if (!isValidBishopricMember) return acc;
+
+      if (!block.start || !block.end) return acc;
 
       const blockKey = DateTime.fromISO(block.start).startOf('day').toISO();
       if (!blockKey) return acc;
@@ -139,6 +153,11 @@ export class InterviewsPage {
     return availabilities;
   });
 
+  findInterviewOption = (code: AppointmentCode | null) => {
+    if (code === null) return undefined;
+    return this.interviewOptions().find(option => option.code === code);
+  }
+
   submit = async () => {
     this.isSubmitting.set(true);
     if (this.interviewForm.invalid || this.timeSlotFormControl.invalid) {
@@ -153,25 +172,29 @@ export class InterviewsPage {
       this.isSubmitting.set(false);
       return;
     }
-    
-    this.createAppointmentGQL.mutate({
-      input: {
-        bishopricMember,
-        name: this.interviewForm.controls.name.value!,
-        type: this.interviewForm.controls.interviewType.value!,
-        description: this.showDescriptionBox() ? this.interviewForm.controls.description.value : '',
-        timeSlot: {
-          start: this.timeSlotFormControl.value![0].start,
-          end: this.timeSlotFormControl.value![0].end,
-        }
+
+    const input: AppointmentDetails = {
+      bishopricMember,
+      name: this.interviewForm.controls.name.value!,
+      type: this.interviewForm.controls.interviewType.value!,
+      description: this.showDescriptionBox() ? this.interviewForm.controls.description.value : '',
+      timeSlot: {
+        start: this.timeSlotFormControl.value![0].start,
+        end: this.timeSlotFormControl.value![0].end,
       }
-    }).subscribe({
+    };
+
+    this.createAppointmentGQL.mutate({ input }).subscribe({
       next: (result) => {
         if (result.data?.createAppointment.success) {
           this._snackBar.open('Appointment created successfully!', 'Close', { duration: 5000 });
-          this.interviewForm.reset();
-          this.timeSlotFormControl.reset();
-          this.availabilityResource.reload();
+          const queryParams: ConfirmedAppointmentDetails = {
+            bishopricMember: this.bishopricMemberMap[input.bishopricMember],
+            type: this.findInterviewOption(input.type)?.name || "",
+            start: input.timeSlot.start,
+            end: input.timeSlot.end
+          }
+          this._router.navigate(['../interviewSuccess'], { relativeTo: this._route, queryParams });
         }
         else {
           const defaultErrorMessage = 'There was a problem setting your appointment. Please try again or contact the executive secretary.';
