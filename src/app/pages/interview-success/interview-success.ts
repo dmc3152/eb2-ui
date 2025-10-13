@@ -21,7 +21,7 @@ export class InterviewSuccessPage {
       map(params => {
         const startDateTime = params['start'] ? DateTime.fromISO(params['start']) : undefined;
         const endDateTime = params['end'] ? DateTime.fromISO(params['end']) : undefined;
-        const start = startDateTime && startDateTime.isValid ? `${startDateTime.toFormat("EEEE, MMM M")} at ${startDateTime.toFormat("h:mm") }` : '';
+        const start = startDateTime && startDateTime.isValid ? `${startDateTime.toFormat("EEEE, MMM d")} at ${startDateTime.toFormat("h:mm") }` : '';
         const end = endDateTime && endDateTime.isValid ? endDateTime.toFormat("h:mm a") : "";
         return {
           ...params,
