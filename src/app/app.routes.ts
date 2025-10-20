@@ -16,41 +16,41 @@ export const routes: Routes = [
     },
     {
         path: 'auth',
-        loadComponent: () => import('./pages/authentication/authentication').then(m => m.AuthenticationPage),
+        loadComponent: () => import('./pages/auth/authentication').then(m => m.AuthenticationPage),
         children: [
             {
                 path: 'login',
-                loadComponent: () => import('./pages/login/login').then(m => m.LoginPage)
+                loadComponent: () => import('./pages/auth/login/login').then(m => m.LoginPage)
             },
             {
                 path: 'logout',
-                loadComponent: () => import('./pages/logout/logout').then(m => m.LogoutPage)
+                loadComponent: () => import('./pages/auth/logout/logout').then(m => m.LogoutPage)
             },
             {
                 path: 'signup',
-                loadComponent: () => import('./pages/signup/signup').then(m => m.SignupPage)
+                loadComponent: () => import('./pages/auth/signup/signup').then(m => m.SignupPage)
             },
             {
                 path: 'forgotPassword',
-                loadComponent: () => import('./pages/forgot-password/forgot-password').then(m => m.ForgotPasswordPage)
+                loadComponent: () => import('./pages/auth/forgot-password/forgot-password').then(m => m.ForgotPasswordPage)
             },
             {
                 path: 'resetPassword',
-                loadComponent: () => import('./pages/reset-password/reset-password').then(m => m.ResetPasswordPage)
+                loadComponent: () => import('./pages/auth/reset-password/reset-password').then(m => m.ResetPasswordPage)
             },
             {
                 path: 'resendEmail',
-                loadComponent: () => import('./pages/resend-email/resend-email').then(m => m.ResendEmailPage)
+                loadComponent: () => import('./pages/auth/resend-email/resend-email').then(m => m.ResendEmailPage)
             },
             {
                 path: 'verifyEmail',
-                loadComponent: () => import('./pages/verify-email/verify-email').then(m => m.VerifyEmailPage)
+                loadComponent: () => import('./pages/auth/verify-email/verify-email').then(m => m.VerifyEmailPage)
             },
         ]
     },
     {
         path: 'nav',
-        loadComponent: () => import('./pages/navigation/navigation.component').then(m => m.NavigationComponent),
+        loadComponent: () => import('./pages/nav/navigation.component').then(m => m.NavigationComponent),
         children: [
             {
                 path: '',
@@ -59,15 +59,15 @@ export const routes: Routes = [
             },
             {
                 path: 'home',
-                loadComponent: () => import('./pages/home/home').then(m => m.HomePage)
+                loadComponent: () => import('./pages/nav/home/home').then(m => m.HomePage)
             },
             {
                 path: 'interviews',
-                loadComponent: () => import('./pages/interviews/interviews').then(m => m.InterviewsPage)
+                loadComponent: () => import('./pages/nav/interviews/interviews').then(m => m.InterviewsPage)
             },
             {
                 path: 'interviewSuccess',
-                loadComponent: () => import('./pages/interview-success/interview-success').then(m => m.InterviewSuccessPage)
+                loadComponent: () => import('./pages/nav/interview-success/interview-success').then(m => m.InterviewSuccessPage)
             }
         ]
     },

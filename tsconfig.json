@@ -16,7 +16,13 @@
     "module": "preserve",
     "lib": ["ES2022", "esnext.asynciterable", "DOM"],
     "allowSyntheticDefaultImports": true,
-    "composite": true
+    "composite": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@core/*": ["app/core/*"],
+      "@pages": ["app/pages/*"],
+      "@graphql": ["../graphql/generated.ts"],
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

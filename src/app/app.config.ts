@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection, inject, provideAppInitializer } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection, inject, provideAppInitializer, isDevMode } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -9,6 +9,7 @@ import { InMemoryCache } from '@apollo/client/core';
 import { environment } from '../environments/environment';
 import { AuthService } from './core/auth';
 import { Utilities } from './core/utilities';
+import { provideServiceWorker } from '@angular/service-worker';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -28,6 +29,9 @@ export const appConfig: ApplicationConfig = {
     provideAppInitializer(async () => {
       const auth = inject(AuthService);
       await Utilities.safeAsync(auth.self());
-    })
+    }), provideServiceWorker('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000'
+          })
   ]
 };

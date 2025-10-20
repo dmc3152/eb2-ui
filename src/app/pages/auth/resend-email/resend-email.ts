@@ -5,9 +5,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../core/auth';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Utilities } from '../../core/utilities';
+import { AuthService } from '@core/auth';
+import { Utilities } from '@core/utilities';
 
 @Component({
   selector: 'app-resend-email',

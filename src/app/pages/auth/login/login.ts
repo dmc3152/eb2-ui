@@ -5,10 +5,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router, RouterLink } from '@angular/router';
-import { Credentials, LoginErrorCodes } from '../../../../graphql/generated';
-import { AuthService } from '../../core/auth';
-import { Utilities } from '../../core/utilities';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '@core/auth';
+import { Utilities } from '@core/utilities';
+import { Credentials, LoginErrorCodes } from '@graphql';
 
 @Component({
   selector: 'app-login',

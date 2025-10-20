@@ -5,10 +5,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
-import { SignUpDetails } from '../../../../graphql/generated';
-import { AuthService } from '../../core/auth';
-import { Utilities } from '../../core/utilities';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '@core/auth';
+import { Utilities } from '@core/utilities';
+import { SignUpDetails } from '@graphql';
+import { FormValidators } from '@core/formValidators';
 
 @Component({
   selector: 'app-signup',
@@ -23,7 +24,13 @@ export class SignupPage {
   signUpForm = new FormGroup({
     name: new FormControl('', Validators.required),
     email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', Validators.required),
+    password: new FormControl('', [
+      Validators.required,
+      FormValidators.hasCapitalLetter,
+      FormValidators.hasLowercaseLetter,
+      FormValidators.hasNumber,
+      FormValidators.noSpecialCharacters
+    ]),
   });
 
   isSignedUp = signal<boolean>(false);

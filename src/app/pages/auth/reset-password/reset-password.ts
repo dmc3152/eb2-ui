@@ -1,25 +1,26 @@
 import { Component, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { map } from 'rxjs';
-import { AuthService } from '../../core/auth';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Utilities } from '../../core/utilities';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
+import { AuthService } from '@core/auth';
+import { Utilities } from '@core/utilities';
+import { ResetPasswordDetails } from '@graphql';
 
 @Component({
-  selector: 'app-verify-email',
+  selector: 'app-reset-password',
   imports: [MatCardModule, MatFormFieldModule, ReactiveFormsModule, MatInputModule, MatButtonModule, RouterLink],
-  templateUrl: './verify-email.html',
-  styleUrl: './verify-email.scss'
+  templateUrl: './reset-password.html',
+  styleUrl: './reset-password.scss'
 })
-export class VerifyEmailPage {
-  private _auth = inject(AuthService);
+export class ResetPasswordPage {
   private _route = inject(ActivatedRoute);
+  private _auth = inject(AuthService);
   private _router = inject(Router);
   private _snackBar = inject(MatSnackBar);
 
@@ -31,23 +32,29 @@ export class VerifyEmailPage {
     };
   })), { initialValue: { code: null, email: null } });
 
-  verifyEmailForm = new FormGroup({
+  resetPasswordForm = new FormGroup({
     code: new FormControl(this.params().code, [Validators.required]),
     email: new FormControl(this.params().email, [Validators.required, Validators.email]),
+    password: new FormControl('', Validators.required)
   });
 
-  verifyEmail = async () => {
-    if (this.verifyEmailForm.invalid) return;
+  resetPassword = async () => {
+    if (this.resetPasswordForm.invalid) return;
 
-    const { email, code } = this.verifyEmailForm.value;
-    const [error, success] = await Utilities.safeAsync(this._auth.verifyEmail(email!, code!));
+    const formValue = this.resetPasswordForm.value;
+    const input: ResetPasswordDetails = {
+      code: formValue.code!,
+      email: formValue.email!,
+      password: formValue.password!
+    }
+    const [error, success] = await Utilities.safeAsync(this._auth.resetPassword(input));
     if (success) {
-      this._snackBar.open("Email verified successfully!", "Dismiss", { duration: 2500 });
-      this._router.navigateByUrl("/home");
+      this._snackBar.open("Reset password successfully!", "Dismiss", { duration: 2500 });
+      this._router.navigate(["../login"], { relativeTo: this._route });
     }
     else {
       if (error) console.error(error);
-      this._snackBar.open("Failed to verify the email", "Dismiss", { duration: 5000 });
+      this._snackBar.open("Failed to reset password", "Dismiss", { duration: 5000 });
     }
   }
 }

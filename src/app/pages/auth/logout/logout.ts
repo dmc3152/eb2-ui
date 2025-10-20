@@ -1,9 +1,8 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../core/auth';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { RouterLink } from '@angular/router';
+import { AuthService } from '@core/auth';
 
 @Component({
   selector: 'app-logout',
