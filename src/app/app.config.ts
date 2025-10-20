@@ -27,8 +27,8 @@ export const appConfig: ApplicationConfig = {
       };
     }),
     provideAppInitializer(async () => {
-      const auth = inject(AuthService);
-      await Utilities.safeAsync(auth.self());
+      // const auth = inject(AuthService);
+      // await Utilities.safeAsync(auth.self());
     }),
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
