@@ -21,11 +21,14 @@ export class SignupPage {
   private _auth = inject(AuthService);
   private _snackBar = inject(MatSnackBar);
 
+  readonly minPasswordLength = 8;
+
   signUpForm = new FormGroup({
     name: new FormControl('', Validators.required),
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [
       Validators.required,
+      Validators.minLength(this.minPasswordLength),
       FormValidators.hasCapitalLetter,
       FormValidators.hasLowercaseLetter,
       FormValidators.hasNumber,

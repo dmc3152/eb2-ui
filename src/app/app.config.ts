@@ -29,9 +29,10 @@ export const appConfig: ApplicationConfig = {
     provideAppInitializer(async () => {
       const auth = inject(AuthService);
       await Utilities.safeAsync(auth.self());
-    }), provideServiceWorker('ngsw-worker.js', {
-            enabled: !isDevMode(),
-            registrationStrategy: 'registerWhenStable:30000'
-          })
+    }),
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
   ]
 };

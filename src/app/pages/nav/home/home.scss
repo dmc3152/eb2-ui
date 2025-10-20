@@ -11,3 +11,7 @@ ul {
     gap: 8px;
     padding-inline-start: 20px;
 }
+
+ul ul {
+    gap: 0;
+}
