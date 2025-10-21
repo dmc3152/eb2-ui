@@ -1,6 +1,6 @@
 {
-  "name": "eb2-ui",
-  "short_name": "eb2-ui",
+  "name": "EB2 Ward App",
+  "short_name": "EB2 App",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",
