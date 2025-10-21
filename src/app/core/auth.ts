@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { Credentials, LoginErrorCodes, LoginGQL, LogoutGQL, RequestPasswordResetErrorCodes, RequestPasswordResetGQL, RequestPasswordResetMutation, ResendEmailVerificationGQL, ResetPasswordDetails, ResetPasswordGQL, ResetPasswordMutationVariables, SelfGQL, SignUpDetails, SignUpGQL, User, VerifyEmailGQL } from '../../../graphql/generated';
+import { Credentials, LoginErrorCodes, LoginGQL, LogoutGQL, RequestPasswordResetErrorCodes, RequestPasswordResetGQL, RequestPasswordResetMutation, ResendEmailVerificationGQL, ResetPasswordDetails, ResetPasswordErrorCodes, ResetPasswordGQL, ResetPasswordMutationVariables, SelfGQL, SignUpDetails, SignUpErrorCodes, SignUpGQL, User, VerifyEmailErrorCodes, VerifyEmailGQL } from '../../../graphql/generated';
 import { catchError, firstValueFrom, of } from 'rxjs';
 import { Utilities } from './utilities';
 import { MutationResult } from 'apollo-angular';
@@ -77,12 +77,17 @@ export class AuthService {
     return response.data.self;
   }
 
-  signUp = async (input: SignUpDetails): Promise<boolean> => {
+  signUp = async (input: SignUpDetails): Promise<{ success: boolean, code: SignUpErrorCodes | null }> => {
     const response = await firstValueFrom(this._signUpGql.mutate({ input }));
-    if (response.data?.signUp.success) return true;
 
-    console.error(response.data?.signUp.error?.message);
-    return false;
+    if (response.data?.signUp.error?.code) {
+      console.error(response.data.signUp.error.message);
+    }
+
+    return {
+      success: !!response.data?.signUp.success,
+      code: response.data?.signUp.error?.code || null
+    };
   }
 
   requestPasswordReset = async (email: String): Promise<boolean> => {
@@ -110,27 +115,41 @@ export class AuthService {
     return false;
   }
 
-  resetPassword = async (input: ResetPasswordDetails): Promise<boolean> => {
+  resetPassword = async (input: ResetPasswordDetails): Promise<{ success: boolean, code: ResetPasswordErrorCodes | null }> => {
     const response = await firstValueFrom(this._resetPasswordGql.mutate({ input }));
-    if (response.data?.resetPassword.success) return true;
 
-    console.error(response.data?.resetPassword.error?.message);
-    return false;
+    if (response.data?.resetPassword.error?.code) {
+      console.error(response.data.resetPassword.error.message);
+    }
+
+    return {
+      success: !!response.data?.resetPassword.success,
+      code: response.data?.resetPassword.error?.code || null
+    };
   }
 
-  verifyEmail = async (email: string, code: number): Promise<boolean> => {
+  verifyEmail = async (email: string, code: number): Promise<{ success: boolean, code: VerifyEmailErrorCodes | null }> => {
     const response = await firstValueFrom(this._verifyEmailGql.mutate({ email, code }));
-    if (response.data?.verifyEmail.success) return true;
 
-    console.error(response.data?.verifyEmail.error?.message);
-    return false;
+    if (response.data?.verifyEmail.error?.code) {
+      console.error(response.data.verifyEmail.error.message);
+    }
+
+    return {
+      success: !!response.data?.verifyEmail.success,
+      code: response.data?.verifyEmail.error?.code || null
+    };
   }
 
   resendEmailVerification = async (email: string) => {
     const response = await firstValueFrom(this._resendEmailVerificationGql.mutate({ email }));
     if (response.data?.resendEmailVerification.success) return true;
 
-    console.error(response.data?.resendEmailVerification.error?.message);
+    if (response.data?.resendEmailVerification.error?.code) {
+      console.error(response.data.resendEmailVerification.error.message);
+      throw new Error(response.data.resendEmailVerification.error.code);
+    }
+
     return false;
   }
 }

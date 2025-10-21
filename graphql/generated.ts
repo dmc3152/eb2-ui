@@ -231,7 +231,12 @@ export type ResendEmailVerificationError = GenericError & {
 };
 
 export enum ResendEmailVerificationErrorCodes {
+  CouldNotCreate = 'COULD_NOT_CREATE',
+  CouldNotUpdate = 'COULD_NOT_UPDATE',
+  EmailAlreadyVerified = 'EMAIL_ALREADY_VERIFIED',
   EmailError = 'EMAIL_ERROR',
+  EmailVerifierAuthenticationFailed = 'EMAIL_VERIFIER_AUTHENTICATION_FAILED',
+  NotFound = 'NOT_FOUND',
   UnknownError = 'UNKNOWN_ERROR'
 }
 
@@ -254,7 +259,12 @@ export type ResetPasswordError = GenericError & {
 };
 
 export enum ResetPasswordErrorCodes {
-  EmailError = 'EMAIL_ERROR',
+  CodeExpired = 'CODE_EXPIRED',
+  CodeInvalid = 'CODE_INVALID',
+  DeleteError = 'DELETE_ERROR',
+  NotFound = 'NOT_FOUND',
+  PasswordResetAgentAuthenticationFailed = 'PASSWORD_RESET_AGENT_AUTHENTICATION_FAILED',
+  ResetError = 'RESET_ERROR',
   UnknownError = 'UNKNOWN_ERROR'
 }
 
@@ -278,8 +288,14 @@ export type SignUpError = GenericError & {
 
 export enum SignUpErrorCodes {
   EmailError = 'EMAIL_ERROR',
+  EmailVerifierAuthenticationFailed = 'EMAIL_VERIFIER_AUTHENTICATION_FAILED',
   InvalidCredentials = 'INVALID_CREDENTIALS',
-  InvalidPassword = 'INVALID_PASSWORD',
+  InvalidPasswordCharacter = 'INVALID_PASSWORD_CHARACTER',
+  InvalidPasswordLength = 'INVALID_PASSWORD_LENGTH',
+  MissingCapitalLetter = 'MISSING_CAPITAL_LETTER',
+  MissingLowercaseLetter = 'MISSING_LOWERCASE_LETTER',
+  MissingNumber = 'MISSING_NUMBER',
+  NotFound = 'NOT_FOUND',
   UnknownError = 'UNKNOWN_ERROR'
 }
 
@@ -309,7 +325,11 @@ export type VerifyEmailError = GenericError & {
 };
 
 export enum VerifyEmailErrorCodes {
-  EmailError = 'EMAIL_ERROR',
+  CodeExpired = 'CODE_EXPIRED',
+  CodeInvalid = 'CODE_INVALID',
+  DeleteError = 'DELETE_ERROR',
+  EmailVerifierAuthenticationFailed = 'EMAIL_VERIFIER_AUTHENTICATION_FAILED',
+  NotFound = 'NOT_FOUND',
   UnknownError = 'UNKNOWN_ERROR'
 }
 

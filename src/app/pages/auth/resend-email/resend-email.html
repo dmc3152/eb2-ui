@@ -7,10 +7,10 @@
             If your email verification code has expired or you did not receive it, you can enter your email address below to have a new verification code sent to you.
             Check your spam folder if you cannot find the email in your inbox.
         </p>
-        <form [formGroup]="resendEmailForm" class="resend-email-form">
+        <form id="resendEmailForm" [formGroup]="resendEmailForm" (ngSubmit)="resendEmail()" class="resend-email-form">
             <mat-form-field class="full-width" subscriptSizing="dynamic">
                 <mat-label>Email</mat-label>
-                <input matInput formControlName="email" placeholder="Ex. jdoe@example.com">
+                <input matInput type="email" formControlName="email" placeholder="Ex. jdoe@example.com">
                 @if (resendEmailForm.controls.email.hasError('required')) {
                 <mat-error>Email is required</mat-error>
                 }
@@ -21,6 +21,6 @@
         <a matButton="text" routerLink="../login">Login</a>
         <a matButton="text" routerLink="../verifyEmail">Verify Email</a>
         <span class="spacer"></span>
-        <button matButton="filled" [disabled]="resendEmailForm.invalid" (click)="resendEmail()">Verify Email</button>
+        <button matButton="filled" [disabled]="resendEmailForm.invalid" type="submit" form="resendEmailForm">Verify Email</button>
     </mat-card-actions>
 </mat-card>

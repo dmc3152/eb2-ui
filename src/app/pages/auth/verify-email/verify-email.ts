@@ -10,6 +10,7 @@ import { map } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '@core/auth';
 import { Utilities } from '@core/utilities';
+import { VerifyEmailErrorCodes } from '@graphql';
 
 @Component({
   selector: 'app-verify-email',
@@ -40,14 +41,32 @@ export class VerifyEmailPage {
     if (this.verifyEmailForm.invalid) return;
 
     const { email, code } = this.verifyEmailForm.value;
-    const [error, success] = await Utilities.safeAsync(this._auth.verifyEmail(email!, code!));
-    if (success) {
+    const [error, result] = await Utilities.safeAsync(this._auth.verifyEmail(email!, code!));
+    if (result?.success) {
       this._snackBar.open("Email verified successfully!", "Dismiss", { duration: 2500 });
-      this._router.navigateByUrl("/home");
+      this._router.navigate(["../login"], { relativeTo: this._route });
     }
     else {
-      if (error) console.error(error);
-      this._snackBar.open("Failed to verify the email", "Dismiss", { duration: 5000 });
+      const errorMessage = this._verifyEmailErrorMessage(result?.code || error?.message);
+      this._snackBar.open(errorMessage, "Dismiss", { duration: 5000 });
+    }
+  }
+
+  private _verifyEmailErrorMessage = (code?: string | null) => {
+    const defaultErrorMessage = "An unknown error occurred. Please try again later";
+    if (!code) return defaultErrorMessage;
+
+    switch (code) {
+      case VerifyEmailErrorCodes.CodeExpired:
+        return "Your code has expired. Please request another code.";
+      case VerifyEmailErrorCodes.CodeInvalid:
+        return "Your code is invalid. Please try again or request another code.";
+      case VerifyEmailErrorCodes.DeleteError:
+      case VerifyEmailErrorCodes.EmailVerifierAuthenticationFailed:
+      case VerifyEmailErrorCodes.NotFound:
+      case VerifyEmailErrorCodes.UnknownError:
+      default:
+        return defaultErrorMessage;
     }
   }
 }

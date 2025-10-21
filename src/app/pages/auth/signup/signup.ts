@@ -8,7 +8,7 @@ import { RouterLink } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '@core/auth';
 import { Utilities } from '@core/utilities';
-import { SignUpDetails } from '@graphql';
+import { ResendEmailVerificationErrorCodes, SignUpDetails, SignUpErrorCodes } from '@graphql';
 import { FormValidators } from '@core/formValidators';
 
 @Component({
@@ -47,7 +47,44 @@ export class SignupPage {
       password: this.signUpForm.controls.password.value!
     };
 
-    this.isSignedUp.set(await this._auth.signUp(input));
+    const [error, result] = await Utilities.safeAsync(this._auth.signUp(input));
+
+    if (result?.success) {
+      const message = result.code === SignUpErrorCodes.EmailError ? "There was a problem sending your verification email" : "Signed up successfully!";
+      this._snackBar.open(message, "Dismiss", { duration: 2500 });
+      this.isSignedUp.set(true);
+    }
+    else {
+      const errorMessage = this._signUpErrorMessage(result?.code || error?.message);
+      this._snackBar.open(errorMessage, "Dismiss", { duration: 5000 });
+    }
+  }
+
+  private _signUpErrorMessage = (code?: string | null) => {
+    const defaultErrorMessage = "An unknown error occurred. Please try again later";
+    if (!code) return defaultErrorMessage;
+
+    switch (code) {
+      case SignUpErrorCodes.InvalidPasswordCharacter:
+        return "Your password has an invalid character"
+      case SignUpErrorCodes.InvalidPasswordLength:
+        return `Your password must have at least ${this.minPasswordLength} characters`;
+      case SignUpErrorCodes.MissingCapitalLetter:
+        return "Your password must have at least 1 capital letter";
+      case SignUpErrorCodes.MissingLowercaseLetter:
+        return "Your password must have at least 1 lowercase letter";
+      case SignUpErrorCodes.MissingNumber:
+        return "Your password must have at least 1 number";
+      case SignUpErrorCodes.EmailError:
+        return "There was a problem sending your verification email";
+      case SignUpErrorCodes.InvalidCredentials:
+        return `This account already exists. Go back to login and choose "Forgot Password" to reset your password.`;
+      case SignUpErrorCodes.EmailVerifierAuthenticationFailed:
+      case SignUpErrorCodes.NotFound:
+      case SignUpErrorCodes.UnknownError:
+      default:
+        return defaultErrorMessage;
+    }
   }
 
   resendEmailVerification = async () => {
@@ -59,8 +96,26 @@ export class SignupPage {
       this._snackBar.open("New email code sent successfully!", "Dismiss", { duration: 2500 });
     }
     else {
-      if (error) console.error(error);
-      this._snackBar.open("There was a problem sending the new code", "Dismiss", { duration: 5000 });
+      const errorMessage = this._resendEmailVerificationErrorMessage(error);
+      this._snackBar.open(errorMessage, "Dismiss", { duration: 5000 });
+    }
+  }
+
+  private _resendEmailVerificationErrorMessage = (error?: Error) => {
+    const defaultErrorMessage = "An unknown error occurred. Please try again later";
+    if (!error) return defaultErrorMessage;
+
+    switch (error.message) {
+      case ResendEmailVerificationErrorCodes.EmailAlreadyVerified:
+        return "Your email has already been verified. No email will be sent";
+      case ResendEmailVerificationErrorCodes.CouldNotUpdate:
+      case ResendEmailVerificationErrorCodes.CouldNotCreate:
+      case ResendEmailVerificationErrorCodes.EmailError:
+      case ResendEmailVerificationErrorCodes.EmailVerifierAuthenticationFailed:
+      case ResendEmailVerificationErrorCodes.NotFound:
+      case ResendEmailVerificationErrorCodes.UnknownError:
+      default:
+        return defaultErrorMessage;
     }
   }
 }

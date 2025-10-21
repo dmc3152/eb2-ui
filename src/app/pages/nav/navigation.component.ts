@@ -11,6 +11,7 @@ import { map, shareReplay } from 'rxjs/operators';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../core/auth';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-navigation',
@@ -25,7 +26,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     AsyncPipe,
     RouterLink,
     RouterOutlet,
-    MatTooltipModule
+    MatTooltipModule,
+    MatMenuModule
 ]
 })
 export class NavigationComponent {

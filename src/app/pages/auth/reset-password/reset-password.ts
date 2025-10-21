@@ -10,7 +10,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 import { AuthService } from '@core/auth';
 import { Utilities } from '@core/utilities';
-import { ResetPasswordDetails } from '@graphql';
+import { ResetPasswordDetails, ResetPasswordErrorCodes } from '@graphql';
 
 @Component({
   selector: 'app-reset-password',
@@ -47,14 +47,33 @@ export class ResetPasswordPage {
       email: formValue.email!,
       password: formValue.password!
     }
-    const [error, success] = await Utilities.safeAsync(this._auth.resetPassword(input));
-    if (success) {
+    const [error, result] = await Utilities.safeAsync(this._auth.resetPassword(input));
+    if (result?.success) {
       this._snackBar.open("Reset password successfully!", "Dismiss", { duration: 2500 });
       this._router.navigate(["../login"], { relativeTo: this._route });
     }
     else {
-      if (error) console.error(error);
-      this._snackBar.open("Failed to reset password", "Dismiss", { duration: 5000 });
+      const errorMessage = this._resetPasswordErrorMessage(result?.code || error?.message);
+      this._snackBar.open(errorMessage, "Dismiss", { duration: 5000 });
+    }
+  }
+
+  private _resetPasswordErrorMessage = (code?: string | null) => {
+    const defaultErrorMessage = "An unknown error occurred. Please try again later";
+    if (!code) return defaultErrorMessage;
+
+    switch (code) {
+      case ResetPasswordErrorCodes.CodeExpired:
+        return "Your code has expired. Please request another code.";
+      case ResetPasswordErrorCodes.CodeInvalid:
+        return "Your code is invalid. Please try again or request another code.";
+      case ResetPasswordErrorCodes.DeleteError:
+      case ResetPasswordErrorCodes.ResetError:
+      case ResetPasswordErrorCodes.PasswordResetAgentAuthenticationFailed:
+      case ResetPasswordErrorCodes.NotFound:
+      case ResetPasswordErrorCodes.UnknownError:
+      default:
+        return defaultErrorMessage;
     }
   }
 }

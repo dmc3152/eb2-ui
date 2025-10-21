@@ -30,11 +30,18 @@
         }
       </a>
       <span class="spacer"></span>
-      <!-- @if (isHandset$ | async) {
+      @if (isHandset$ | async) {
         @if (isAuthenticated()) {
-          <button routerLink="/auth/logout" matIconButton class="icon-button" matTooltip="Logout">
-            <mat-icon>logout</mat-icon>
+          <button matIconButton [matMenuTriggerFor]="profileMenu" aria-label="Profile menu" class="icon-button">
+            <mat-icon>account_circle</mat-icon>
           </button>
+          <mat-menu #profileMenu="matMenu">
+            <span class="profile-title">{{ authenticatedUser()?.name }}</span>
+            <a mat-menu-item routerLink="/auth/logout">
+              <mat-icon>logout</mat-icon>
+              <span>Logout</span>
+            </a>
+          </mat-menu>
         }
         @else {
           <a routerLink="/auth/login" matIconButton class="icon-button" matTooltip="Login">
@@ -44,10 +51,16 @@
       }
       @else {
         @if (isAuthenticated()) {
-          <a routerLink="/auth/logout" matButton>
-            <mat-icon>logout</mat-icon>
-            Logout
-          </a>
+          <button matIconButton [matMenuTriggerFor]="profileMenu" aria-label="Profile menu" class="icon-button">
+            <mat-icon>account_circle</mat-icon>
+          </button>
+          <mat-menu #profileMenu="matMenu">
+            <span class="profile-title">{{ authenticatedUser()?.name }}</span>
+            <a mat-menu-item routerLink="/auth/logout">
+              <mat-icon>logout</mat-icon>
+              <span>Logout</span>
+            </a>
+          </mat-menu>
         }
         @else {
           <a routerLink="/auth/login" matButton>
@@ -55,7 +68,7 @@
             Login
           </a>
         }
-      } -->
+      }
     </mat-toolbar>
     <div class="content">
       <router-outlet></router-outlet>

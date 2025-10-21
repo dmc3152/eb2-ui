@@ -8,6 +8,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '@core/auth';
 import { Utilities } from '@core/utilities';
+import { ResendEmailVerificationErrorCodes } from '@graphql';
 
 @Component({
   selector: 'app-resend-email',
@@ -35,8 +36,26 @@ export class ResendEmailPage {
       this._router.navigate(["../verifyEmail"], { relativeTo: this._route, queryParams: { email } });
     }
     else {
-      if (error) console.error(error);
-      this._snackBar.open("Failed to send the code", "Dismiss", { duration: 5000 });
+      const errorMessage = this._resendEmailVerificationErrorMessage(error);
+      this._snackBar.open(errorMessage, "Dismiss", { duration: 5000 });
+    }
+  }
+
+  private _resendEmailVerificationErrorMessage = (error?: Error) => {
+    const defaultErrorMessage = "An unknown error occurred. Please try again later";
+    if (!error) return defaultErrorMessage;
+
+    switch (error.message) {
+      case ResendEmailVerificationErrorCodes.EmailAlreadyVerified:
+        return "Your email has already been verified. No email will be sent";
+      case ResendEmailVerificationErrorCodes.CouldNotUpdate:
+      case ResendEmailVerificationErrorCodes.CouldNotCreate:
+      case ResendEmailVerificationErrorCodes.EmailError:
+      case ResendEmailVerificationErrorCodes.EmailVerifierAuthenticationFailed:
+      case ResendEmailVerificationErrorCodes.NotFound:
+      case ResendEmailVerificationErrorCodes.UnknownError:
+      default:
+        return defaultErrorMessage;
     }
   }
 }

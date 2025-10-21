@@ -57,3 +57,10 @@ mat-toolbar {
   top: 0;
   z-index: 2;
 }
+
+.profile-title {
+  display: flex;
+  justify-content: center;
+  font: var(--mat-sys-title-medium);
+  padding: 12px;
+}
