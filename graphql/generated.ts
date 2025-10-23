@@ -21,26 +21,12 @@ export type Scalars = {
   EmailAddress: { input: any; output: any; }
 };
 
-export enum AppointmentCode {
-  Baptism = 'BAPTISM',
-  EcclesiasticalEndorsement = 'ECCLESIASTICAL_ENDORSEMENT',
-  Mission = 'MISSION',
-  Other = 'OTHER',
-  PatriarchalBlessing = 'PATRIARCHAL_BLESSING',
-  PersonalMatterLong = 'PERSONAL_MATTER_LONG',
-  PersonalMatterShort = 'PERSONAL_MATTER_SHORT',
-  TempleRecommend = 'TEMPLE_RECOMMEND',
-  TempleRecommendRenewal = 'TEMPLE_RECOMMEND_RENEWAL',
-  TempleWorker = 'TEMPLE_WORKER',
-  TithingDeclaration = 'TITHING_DECLARATION'
-}
-
 export type AppointmentDetails = {
-  bishopricMember: BishopricMember;
+  bishopricMember: Scalars['ID']['input'];
   description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
   name: Scalars['String']['input'];
   timeSlot: AppointmentTimeSlot;
-  type: AppointmentCode;
 };
 
 export type AppointmentError = GenericError & {
@@ -51,13 +37,14 @@ export type AppointmentError = GenericError & {
 
 export enum AppointmentErrorCodes {
   AppointmentConflict = 'APPOINTMENT_CONFLICT',
+  AppointmentTypeNotFound = 'APPOINTMENT_TYPE_NOT_FOUND',
   InvalidTimeSlot = 'INVALID_TIME_SLOT',
   UnknownError = 'UNKNOWN_ERROR'
 }
 
 export type AppointmentPayload = {
   __typename?: 'AppointmentPayload';
-  bishopricMember?: Maybe<BishopricMember>;
+  bishopricMember?: Maybe<Scalars['ID']['output']>;
   error?: Maybe<AppointmentError>;
   success: Scalars['Boolean']['output'];
   timeSlot?: Maybe<TimeSlot>;
@@ -70,17 +57,17 @@ export type AppointmentTimeSlot = {
 
 export type AppointmentType = {
   __typename?: 'AppointmentType';
-  code: AppointmentCode;
   description?: Maybe<Scalars['String']['output']>;
   durationInMinutes: Scalars['Int']['output'];
-  interviewers: Array<BishopricMember>;
+  id: Scalars['ID']['output'];
+  interviewers: Array<Scalars['ID']['output']>;
   name: Scalars['String']['output'];
 };
 
 export type AvailabilityBlock = {
   __typename?: 'AvailabilityBlock';
   availableSlot?: Maybe<TimeSlot>;
-  bishopricMember?: Maybe<BishopricMember>;
+  bishopricMember?: Maybe<Scalars['ID']['output']>;
   end?: Maybe<Scalars['DateTime']['output']>;
   priorityDirection?: Maybe<PriorityDirection>;
   start?: Maybe<Scalars['DateTime']['output']>;
@@ -90,12 +77,6 @@ export type AvailabilityBlock = {
 export type AvailabilityBlockAvailableSlotArgs = {
   durationInMinutes: Scalars['Int']['input'];
 };
-
-export enum BishopricMember {
-  Bishop = 'BISHOP',
-  FirstCounselor = 'FIRST_COUNSELOR',
-  SecondCounselor = 'SECOND_COUNSELOR'
-}
 
 export type Credentials = {
   email: Scalars['EmailAddress']['input'];
@@ -194,12 +175,12 @@ export type Query = {
 
 
 export type QueryAvailabilityBlocksArgs = {
-  bishopricMember: BishopricMember;
+  bishopricMember: Scalars['ID']['input'];
 };
 
 
 export type QueryAvailableTimeSlotsArgs = {
-  bishopricMember: BishopricMember;
+  bishopricMember: Scalars['ID']['input'];
   durationInMinutes: Scalars['Int']['input'];
 };
 
@@ -397,7 +378,7 @@ export type AvailabilityBlocksQueryVariables = Exact<{
 }>;
 
 
-export type AvailabilityBlocksQuery = { __typename?: 'Query', allAvailabilityBlocks: Array<{ __typename?: 'AvailabilityBlock', start?: string | null, end?: string | null, bishopricMember?: BishopricMember | null, availableSlot?: { __typename?: 'TimeSlot', start?: string | null, end?: string | null } | null }> };
+export type AvailabilityBlocksQuery = { __typename?: 'Query', allAvailabilityBlocks: Array<{ __typename?: 'AvailabilityBlock', start?: string | null, end?: string | null, bishopricMember?: string | null, availableSlot?: { __typename?: 'TimeSlot', start?: string | null, end?: string | null } | null }> };
 
 export type CreateAppointmentMutationVariables = Exact<{
   input: AppointmentDetails;
@@ -409,7 +390,7 @@ export type CreateAppointmentMutation = { __typename?: 'Mutation', createAppoint
 export type AllAppointmentTypesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllAppointmentTypesQuery = { __typename?: 'Query', allAppointmentTypes: Array<{ __typename?: 'AppointmentType', code: AppointmentCode, name: string, description?: string | null, durationInMinutes: number, interviewers: Array<BishopricMember> }> };
+export type AllAppointmentTypesQuery = { __typename?: 'Query', allAppointmentTypes: Array<{ __typename?: 'AppointmentType', id: string, name: string, description?: string | null, durationInMinutes: number, interviewers: Array<string> }> };
 
 export const SelfDocument = gql`
     query Self {
@@ -635,7 +616,7 @@ export const CreateAppointmentDocument = gql`
 export const AllAppointmentTypesDocument = gql`
     query AllAppointmentTypes {
   allAppointmentTypes {
-    code
+    id
     name
     description
     durationInMinutes

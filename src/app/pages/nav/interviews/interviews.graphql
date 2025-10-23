@@ -22,7 +22,7 @@ mutation CreateAppointment($input: AppointmentDetails!) {
 
 query AllAppointmentTypes {
   allAppointmentTypes {
-    code
+    id
     name
     description
     durationInMinutes

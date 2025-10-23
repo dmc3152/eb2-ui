@@ -4,7 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { AllAppointmentTypesGQL, AppointmentCode, AppointmentDetails, AvailabilityBlocksGQL, BishopricMember, CreateAppointmentGQL } from '@graphql';
+import { AllAppointmentTypesGQL, AppointmentDetails, AvailabilityBlocksGQL, CreateAppointmentGQL } from '@graphql';
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { map, of, tap } from 'rxjs';
 import { DatePipe, KeyValuePipe } from '@angular/common';
@@ -60,7 +60,7 @@ export class InterviewsPage {
   private sortStringFactory = <T extends object>(field: keyof T): (a: T, b: T) => number => (a, b) => (a[field] as string || '').localeCompare(b[field] as string || '', undefined, { sensitivity: 'base', numeric: true })
   interviewForm = new FormGroup({
     name: new FormControl('', Validators.required),
-    interviewType: new FormControl<AppointmentCode | null>(null, Validators.required),
+    interviewType: new FormControl<string | null>(null, Validators.required),
     description: new FormControl(''),
   });
   timeSlotFormControl = new FormControl<[{ bishopricMember: string; start: string; end: string; }]>([] as any, Validators.required);
@@ -68,14 +68,14 @@ export class InterviewsPage {
   showDescriptionBox = computed(() => {
     const type = this.interviewType();
     if (!type) return false;
-    const appointmentCodes: AppointmentCode[] = [AppointmentCode.PersonalMatterShort, AppointmentCode.PersonalMatterLong, AppointmentCode.Other];
+    const appointmentCodes: string[] = ['appointment_type:personal_matter_short', 'appointment_type:personal_matter_long', 'appointment_type:other'];
     return appointmentCodes.includes(type);
   });
   isSubmitting = signal(false);
   interviewOptions = toSignal(this.allAppointmentTypesGQL.fetch().pipe(
     map(response => Array.from(response.data.allAppointmentTypes).sort(this.sortStringFactory("name"))),
     map(options => {
-      const tithingDeclarationOptionIndex = options.findIndex(item => item.code === 'TITHING_DECLARATION');
+      const tithingDeclarationOptionIndex = options.findIndex(item => item.id === 'appointment_type:tithing_declaration');
       if (tithingDeclarationOptionIndex > 0) {
         const [tithingDeclarationOption] = options.splice(tithingDeclarationOptionIndex, 1);
         options.unshift(tithingDeclarationOption);
@@ -90,9 +90,9 @@ export class InterviewsPage {
   });
 
   private bishopricMemberMap = {
-    [BishopricMember.Bishop]: 'Bishop',
-    [BishopricMember.FirstCounselor]: 'Bro Naidu',
-    [BishopricMember.SecondCounselor]: 'Bro Komatsu',
+    ['calling:bishop']: 'Bishop',
+    ['calling:bishopric_first_counselor']: 'Bro Naidu',
+    ['calling:bishopric_second_counselor']: 'Bro Komatsu',
   }
 
   availabilityBlocks = computed(() => {
@@ -116,7 +116,7 @@ export class InterviewsPage {
           start: block.start,
           end: block.end,
           timeSlots: [{
-            bishopricMember: this.bishopricMemberMap[block.bishopricMember],
+            bishopricMember: this.bishopricMemberMap[block.bishopricMember as keyof typeof this.bishopricMemberMap],
             start: block.availableSlot.start,
             end: block.availableSlot.end
           }]
@@ -134,7 +134,7 @@ export class InterviewsPage {
           existingBlock.end = block.end;
         }
         existingBlock.timeSlots.push({
-          bishopricMember: this.bishopricMemberMap[block.bishopricMember],
+          bishopricMember: this.bishopricMemberMap[block.bishopricMember as keyof typeof this.bishopricMemberMap],
           start: block.availableSlot.start,
           end: block.availableSlot.end
         });
@@ -153,9 +153,9 @@ export class InterviewsPage {
     return availabilities;
   });
 
-  findInterviewOption = (code: AppointmentCode | null) => {
-    if (code === null) return undefined;
-    return this.interviewOptions().find(option => option.code === code);
+  findInterviewOption = (id: string | null) => {
+    if (id === null) return undefined;
+    return this.interviewOptions().find(option => option.id === id);
   }
 
   submit = async () => {
@@ -167,7 +167,7 @@ export class InterviewsPage {
       return;
     }
 
-    const bishopricMember = Object.entries(this.bishopricMemberMap).find(([_, name]) => name === this.timeSlotFormControl.value?.[0].bishopricMember)?.[0] as BishopricMember;
+    const bishopricMember = Object.entries(this.bishopricMemberMap).find(([_, name]) => name === this.timeSlotFormControl.value?.[0].bishopricMember)?.[0];
     if (!bishopricMember) {
       this.isSubmitting.set(false);
       return;
@@ -176,7 +176,7 @@ export class InterviewsPage {
     const input: AppointmentDetails = {
       bishopricMember,
       name: this.interviewForm.controls.name.value!,
-      type: this.interviewForm.controls.interviewType.value!,
+      id: this.interviewForm.controls.interviewType.value!,
       description: this.showDescriptionBox() ? this.interviewForm.controls.description.value : '',
       timeSlot: {
         start: this.timeSlotFormControl.value![0].start,
@@ -189,8 +189,8 @@ export class InterviewsPage {
         if (result.data?.createAppointment.success) {
           this._snackBar.open('Appointment created successfully!', 'Close', { duration: 5000 });
           const queryParams: ConfirmedAppointmentDetails = {
-            bishopricMember: this.bishopricMemberMap[input.bishopricMember],
-            type: this.findInterviewOption(input.type)?.name || "",
+            bishopricMember: this.bishopricMemberMap[input.bishopricMember as keyof typeof this.bishopricMemberMap],
+            type: this.findInterviewOption(input.id)?.name || "",
             start: input.timeSlot.start,
             end: input.timeSlot.end
           }
