@@ -24,7 +24,8 @@ export class SignupPage {
   readonly minPasswordLength = 8;
 
   signUpForm = new FormGroup({
-    name: new FormControl('', Validators.required),
+    firstName: new FormControl('', Validators.required),
+    lastName: new FormControl('', Validators.required),
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [
       Validators.required,
@@ -42,7 +43,8 @@ export class SignupPage {
     if (this.signUpForm.invalid) return;
 
     const input: SignUpDetails = {
-      name: this.signUpForm.controls.name.value!,
+      firstName: this.signUpForm.controls.firstName.value!,
+      lastName: this.signUpForm.controls.lastName.value!,
       email: this.signUpForm.controls.email.value!,
       password: this.signUpForm.controls.password.value!
     };

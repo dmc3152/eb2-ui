@@ -1,4 +1,6 @@
+import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
+import { AuthService } from '@core/auth';
 
 export const routes: Routes = [
     {
@@ -68,6 +70,16 @@ export const routes: Routes = [
             {
                 path: 'interviewSuccess',
                 loadComponent: () => import('./pages/nav/interview-success/interview-success').then(m => m.InterviewSuccessPage)
+            },
+            {
+                path: 'users',
+                loadComponent: () => import('./pages/nav/users/users').then(m => m.UsersPage),
+                canActivate: [
+                    () => {
+                        const authService = inject(AuthService);
+                        return !!authService.authenticatedUser()?.isSiteAdmin;
+                    }
+                ]
             }
         ]
     },

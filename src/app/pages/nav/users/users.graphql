@@ -1,0 +1,25 @@
+fragment UserListItem on User {
+    id
+    firstName
+    lastName
+    callings {
+        id
+        name
+    }
+}
+
+query UsersSearch($input: UserSearch) {
+  users(input: $input) {
+    edges {
+      node {
+        ...UserListItem
+      }
+    }
+    pageInfo {
+      pageSize
+      pageOffset
+      hasNextPage
+      totalCount
+    }
+  }
+}

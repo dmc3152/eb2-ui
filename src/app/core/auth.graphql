@@ -1,8 +1,14 @@
 query Self {
   self {
     id
-    name
+    firstName
+    lastName
     email
+    isSiteAdmin
+    callings {
+      id
+      name
+    }
   }
 }
 
@@ -20,8 +26,13 @@ mutation Login($input: Credentials!) {
   login(input: $input) {
     user {
       id
-      name
+      firstName
+      lastName
       email
+      callings {
+        id
+        name
+      }
     }
     success
     error {

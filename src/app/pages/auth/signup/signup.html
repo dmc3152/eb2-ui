@@ -11,10 +11,18 @@
     <mat-card-content>
         <form id="signUpForm" [formGroup]="signUpForm" (ngSubmit)="signUp()" class="sign-up-form">
             <mat-form-field class="full-width" subscriptSizing="dynamic">
-                <mat-label>Name</mat-label>
-                <input matInput formControlName="name" placeholder="Ex. John Doe">
-                @if (signUpForm.controls.name.hasError('required')) {
-                <mat-error>Name is required</mat-error>
+                <mat-label>First Name</mat-label>
+                <input matInput formControlName="firstName" placeholder="Ex. John">
+                @if (signUpForm.controls.firstName.hasError('required')) {
+                <mat-error>First Name is required</mat-error>
+                }
+            </mat-form-field>
+
+            <mat-form-field class="full-width" subscriptSizing="dynamic">
+                <mat-label>Last Name</mat-label>
+                <input matInput formControlName="lastName" placeholder="Ex. Doe">
+                @if (signUpForm.controls.lastName.hasError('required')) {
+                <mat-error>Last Name is required</mat-error>
                 }
             </mat-form-field>
 

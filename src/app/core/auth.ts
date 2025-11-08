@@ -17,8 +17,11 @@ export class AuthService {
   private _verifyEmailGql = inject(VerifyEmailGQL);
   private _resendEmailVerificationGql = inject(ResendEmailVerificationGQL);
 
-  isAuthenticated = signal<boolean>(false);
-  authenticatedUser = signal<User | null>(null);
+  private _authenticatedUser = signal<User | null>(null);
+  private _isAuthenticated = signal<boolean>(false);
+  
+  isAuthenticated = this._isAuthenticated.asReadonly();
+  authenticatedUser = this._authenticatedUser.asReadonly();
 
   login = async (input: Credentials): Promise<boolean> => {
     const result = await firstValueFrom(this._loginGql.mutate({ input }).pipe(
@@ -37,8 +40,8 @@ export class AuthService {
     ));
 
     if (result.data?.login.success) {
-      this.isAuthenticated.set(true);
-      this.authenticatedUser.set(result.data.login.user || null);
+      this._isAuthenticated.set(true);
+      this._authenticatedUser.set(result.data.login.user || null);
       return true;
     }
 
@@ -53,8 +56,8 @@ export class AuthService {
   logout = async (): Promise<boolean> => {
     const response = await firstValueFrom(this._logoutGql.mutate());
     if (response.data?.logout.success) {
-      this.isAuthenticated.set(false);
-      this.authenticatedUser.set(null);
+      this._isAuthenticated.set(false);
+      this._authenticatedUser.set(null);
       return true;
     }
 
@@ -71,8 +74,8 @@ export class AuthService {
       return null;
     }
 
-    this.isAuthenticated.set(true);
-    this.authenticatedUser.set(response.data.self);
+    this._isAuthenticated.set(true);
+    this._authenticatedUser.set(response.data.self);
 
     return response.data.self;
   }

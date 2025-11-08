@@ -78,6 +78,12 @@ export type AvailabilityBlockAvailableSlotArgs = {
   durationInMinutes: Scalars['Int']['input'];
 };
 
+export type Calling = {
+  __typename?: 'Calling';
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type Credentials = {
   email: Scalars['EmailAddress']['input'];
   password: Scalars['String']['input'];
@@ -159,6 +165,19 @@ export type MutationVerifyEmailArgs = {
   email: Scalars['EmailAddress']['input'];
 };
 
+export type OffsetPaging = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  hasNextPage: Scalars['Boolean']['output'];
+  pageOffset: Scalars['Int']['output'];
+  pageSize: Scalars['Int']['output'];
+  totalCount: Scalars['Int']['output'];
+};
+
 export enum PriorityDirection {
   Asc = 'ASC',
   Desc = 'DESC'
@@ -171,6 +190,7 @@ export type Query = {
   availabilityBlocks: Array<AvailabilityBlock>;
   availableTimeSlots: Array<Maybe<TimeSlot>>;
   self?: Maybe<User>;
+  users?: Maybe<UserConnection>;
 };
 
 
@@ -182,6 +202,11 @@ export type QueryAvailabilityBlocksArgs = {
 export type QueryAvailableTimeSlotsArgs = {
   bishopricMember: Scalars['ID']['input'];
   durationInMinutes: Scalars['Int']['input'];
+};
+
+
+export type QueryUsersArgs = {
+  input?: InputMaybe<UserSearch>;
 };
 
 export type RequestPasswordResetError = GenericError & {
@@ -257,7 +282,8 @@ export type ResetPasswordPayload = {
 
 export type SignUpDetails = {
   email: Scalars['EmailAddress']['input'];
-  name: Scalars['String']['input'];
+  firstName: Scalars['String']['input'];
+  lastName: Scalars['String']['input'];
   password: Scalars['String']['input'];
 };
 
@@ -286,6 +312,11 @@ export type SignUpPayload = {
   success: Scalars['Boolean']['output'];
 };
 
+export enum SortDirection {
+  Asc = 'ASC',
+  Desc = 'DESC'
+}
+
 export type TimeSlot = {
   __typename?: 'TimeSlot';
   end?: Maybe<Scalars['DateTime']['output']>;
@@ -294,9 +325,52 @@ export type TimeSlot = {
 
 export type User = {
   __typename?: 'User';
+  callings: Array<Calling>;
   email: Scalars['EmailAddress']['output'];
+  firstName: Scalars['String']['output'];
   id: Scalars['ID']['output'];
-  name: Scalars['String']['output'];
+  isSiteAdmin?: Maybe<Scalars['Boolean']['output']>;
+  lastName: Scalars['String']['output'];
+};
+
+export type UserConnection = {
+  __typename?: 'UserConnection';
+  edges: Array<UserEdge>;
+  pageInfo: PageInfo;
+};
+
+export type UserEdge = {
+  __typename?: 'UserEdge';
+  node: User;
+};
+
+export type UserFilters = {
+  callingIsOneOf?: InputMaybe<Array<Scalars['ID']['input']>>;
+  emailContains?: InputMaybe<Scalars['String']['input']>;
+  firstNameContains?: InputMaybe<Scalars['String']['input']>;
+  hasCalling?: InputMaybe<Scalars['Boolean']['input']>;
+  isEmailVerified?: InputMaybe<Scalars['Boolean']['input']>;
+  isSiteAdmin?: InputMaybe<Scalars['Boolean']['input']>;
+  lastNameContains?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UserSearch = {
+  filters?: InputMaybe<UserFilters>;
+  paging?: InputMaybe<OffsetPaging>;
+  sorting?: InputMaybe<Array<UserSorting>>;
+};
+
+export enum UserSortField {
+  Email = 'EMAIL',
+  FirstName = 'FIRST_NAME',
+  IsEmailVerified = 'IS_EMAIL_VERIFIED',
+  IsSiteAdmin = 'IS_SITE_ADMIN',
+  LastName = 'LAST_NAME'
+}
+
+export type UserSorting = {
+  direction: SortDirection;
+  field: UserSortField;
 };
 
 export type VerifyEmailError = GenericError & {
@@ -323,7 +397,7 @@ export type VerifyEmailPayload = {
 export type SelfQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SelfQuery = { __typename?: 'Query', self?: { __typename?: 'User', id: string, name: string, email: any } | null };
+export type SelfQuery = { __typename?: 'Query', self?: { __typename?: 'User', id: string, firstName: string, lastName: string, email: any, isSiteAdmin?: boolean | null, callings: Array<{ __typename?: 'Calling', id: string, name: string }> } | null };
 
 export type SignUpMutationVariables = Exact<{
   input: SignUpDetails;
@@ -337,7 +411,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'LoginPayload', success: boolean, user?: { __typename?: 'User', id: string, name: string, email: any } | null, error?: { __typename?: 'LoginError', code?: LoginErrorCodes | null, message?: string | null } | null } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'LoginPayload', success: boolean, user?: { __typename?: 'User', id: string, firstName: string, lastName: string, email: any, callings: Array<{ __typename?: 'Calling', id: string, name: string }> } | null, error?: { __typename?: 'LoginError', code?: LoginErrorCodes | null, message?: string | null } | null } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -392,12 +466,38 @@ export type AllAppointmentTypesQueryVariables = Exact<{ [key: string]: never; }>
 
 export type AllAppointmentTypesQuery = { __typename?: 'Query', allAppointmentTypes: Array<{ __typename?: 'AppointmentType', id: string, name: string, description?: string | null, durationInMinutes: number, interviewers: Array<string> }> };
 
+export type UserListItemFragment = { __typename?: 'User', id: string, firstName: string, lastName: string, callings: Array<{ __typename?: 'Calling', id: string, name: string }> };
+
+export type UsersSearchQueryVariables = Exact<{
+  input?: InputMaybe<UserSearch>;
+}>;
+
+
+export type UsersSearchQuery = { __typename?: 'Query', users?: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, firstName: string, lastName: string, callings: Array<{ __typename?: 'Calling', id: string, name: string }> } }>, pageInfo: { __typename?: 'PageInfo', pageSize: number, pageOffset: number, hasNextPage: boolean, totalCount: number } } | null };
+
+export const UserListItemFragmentDoc = gql`
+    fragment UserListItem on User {
+  id
+  firstName
+  lastName
+  callings {
+    id
+    name
+  }
+}
+    `;
 export const SelfDocument = gql`
     query Self {
   self {
     id
-    name
+    firstName
+    lastName
     email
+    isSiteAdmin
+    callings {
+      id
+      name
+    }
   }
 }
     `;
@@ -439,8 +539,13 @@ export const LoginDocument = gql`
   login(input: $input) {
     user {
       id
-      name
+      firstName
+      lastName
       email
+      callings {
+        id
+        name
+      }
     }
     success
     error {
@@ -630,6 +735,34 @@ export const AllAppointmentTypesDocument = gql`
   })
   export class AllAppointmentTypesGQL extends Apollo.Query<AllAppointmentTypesQuery, AllAppointmentTypesQueryVariables> {
     document = AllAppointmentTypesDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UsersSearchDocument = gql`
+    query UsersSearch($input: UserSearch) {
+  users(input: $input) {
+    edges {
+      node {
+        ...UserListItem
+      }
+    }
+    pageInfo {
+      pageSize
+      pageOffset
+      hasNextPage
+      totalCount
+    }
+  }
+}
+    ${UserListItemFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UsersSearchGQL extends Apollo.Query<UsersSearchQuery, UsersSearchQueryVariables> {
+    document = UsersSearchDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
