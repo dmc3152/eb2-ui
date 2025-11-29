@@ -60,7 +60,8 @@
                     </div>
                 }
             </div>
-            <!-- <div class="footer">
+            @if (currentState !== 'SCORE') {
+            <div class="footer">
                 @let duration = time();
                 @if (duration) {
                 <app-ring-timer #timer [duration]="duration" [size]="120" [strokeWidth]="8" [fontColorClass]="'font-color-dark-background'"></app-ring-timer>
@@ -70,7 +71,8 @@
                     <span>Scan to join</span>
                     <qrcode [qrdata]="'http://localhost:4200/christmas/join-trivia-game'" [width]="128" [errorCorrectionLevel]="'M'"></qrcode>
                 </div>
-            </div> -->
+            </div>
+            }
         </mat-card-content>
     </mat-card>
 </div>
