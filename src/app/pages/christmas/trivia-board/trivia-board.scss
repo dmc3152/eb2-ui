@@ -1,0 +1,464 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.trivia-game-board {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 16px;
+    align-items: center;
+    // margin-top: 10%;
+    padding: 16px;
+    height: 100%;
+    overflow: hidden;
+}
+
+mat-card.mat-mdc-card-filled {
+    background-color: rgba(255, 255, 255, 0.2);
+    max-width: 100%;
+    min-height: 100%;
+    color: white;
+    overflow: hidden;
+    height: 100%;
+}
+
+.question-option-list {
+    list-style-type: upper-alpha;
+    font-size: xx-large;
+    line-height: normal;
+    display: grid;
+    /* Define two columns of equal width */
+    grid-template-columns: 1fr 1fr;
+    /* Define two rows of content */
+    grid-template-rows: 1fr 1fr;
+    column-gap: 48px;
+    row-gap: 24px;
+
+    /* Explicitly place the list items using grid areas: */
+    /* The number refers to the list item's index (child 1, child 2, etc.) */
+    /* [1] & [2] go in the first column (col 1, row 1 & col 1, row 2) */
+    /* [3] & [4] go in the second column (col 2, row 1 & col 2, row 2) */
+
+    /* Specific item placement using nth-child selectors */
+    span:nth-child(1) { grid-area: 1 / 1; } /* Row 1, Column 1 */
+    span:nth-child(2) { grid-area: 2 / 1; } /* Row 2, Column 1 */
+    span:nth-child(3) { grid-area: 1 / 2; } /* Row 1, Column 2 */
+    span:nth-child(4) { grid-area: 2 / 2; } /* Row 2, Column 2 */
+
+    span {
+        border-radius: 24px;
+        border: 2px solid grey;
+        padding: 24px;
+        // backdrop-filter: blur(24px);
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+}
+
+// .list-container ol.grid-list {
+//     display: grid;
+//     /* Define two columns of equal width */
+//     grid-template-columns: 1fr 1fr;
+//     /* Define two rows of content */
+//     grid-template-rows: auto auto;
+
+//     /* Explicitly place the list items using grid areas: */
+//     /* The number refers to the list item's index (child 1, child 2, etc.) */
+//     /* [1] & [2] go in the first column (col 1, row 1 & col 1, row 2) */
+//     /* [3] & [4] go in the second column (col 2, row 1 & col 2, row 2) */
+
+//     /* Specific item placement using nth-child selectors */
+//     li:nth-child(1) { grid-area: 1 / 1; } /* Row 1, Column 1 */
+//     li:nth-child(2) { grid-area: 2 / 1; } /* Row 2, Column 1 */
+//     li:nth-child(3) { grid-area: 1 / 2; } /* Row 1, Column 2 */
+//     li:nth-child(4) { grid-area: 2 / 2; } /* Row 2, Column 2 */
+// }
+
+
+.question-category {
+    // font-size: smaller;
+    margin-top: 0;
+}
+
+.question-category-label {
+    font-weight: 500;
+}
+
+.question-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.question-text {
+    font-size: xxx-large;
+    line-height: normal;
+    margin-bottom: 36px;
+}
+
+@keyframes show-correct-answer {
+    from {
+        border-color: grey;
+        background-color: rgba(0, 0, 0, 0.4);
+        transform: scale(1);
+    }
+
+    to {
+        color: rgb(0, 158, 0);
+        border-color: rgb(3, 92, 3);
+        background-color: rgba(3, 92, 3, 0.2);
+        font-weight: 500;
+        transform: scale(1.05);
+    }
+}
+
+.correct-answer {
+    animation: show-correct-answer 0.4s ease-in forwards;
+}
+
+mat-card-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+    height: 100%;
+    max-height: 100%;
+}
+
+.footer {
+    display: flex;
+    align-items: end;
+}
+
+.spacer {
+    flex: 1;
+}
+
+.qr-code {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: white;
+    font-weight: 500;
+}
+
+.question-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+    height: 100%;
+    max-height: 100%;
+}
+
+.message-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+}
+
+.message {
+    font-size: xx-large;
+}
+
+/* Define the animation keyframes */
+@keyframes snowflake-drop {
+    /* 0% is the starting state */
+    from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+        /* Starts above and slightly smaller */
+    }
+
+    /* 100% is the ending state (resting position) */
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Apply the animation when the element is active */
+.snowflake-drop {
+    animation: snowflake-drop 0.5s ease-out forwards;
+}
+
+@keyframes snowflake-out {
+    /* 100% is the ending state (resting position) */
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+    /* 0% is the starting state */
+    to {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+        /* Starts above and slightly smaller */
+    }
+}
+
+/* Apply the animation when the element is active */
+.snowflake-out {
+    animation: snowflake-out 0.5s ease-out backwards;
+}
+
+/* Optional: To animate the element leaving the screen (requires an *ngIf delay or specific CSS handling) */
+/* .question-box.ng-leave {
+  animation: snowflake-drop-out 0.3s ease-in forwards;
+} */
+/* If you need a smooth exit animation, you will likely need a small helper function in Angular
+   to delay the removal of the element until the CSS animation completes.
+   (The Angular Animations module handles ':leave' automatically, making it the easier option for exits.)
+*/
+
+@keyframes wreath-spin-in {
+
+    /* Starts small, rotated, and slightly transparent */
+    0% {
+        transform: scale(0.5) rotate(180deg);
+        opacity: 0;
+    }
+
+    /* Ends full size, straight, and fully visible */
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+.wreath-spin-in {
+    animation: wreath-spin-in 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+    /* Use a bouncy cubic-bezier for a fun, springy look! */
+}
+
+@keyframes chimney-fade-out {
+
+    /* Starting position (e.g., when the element is removed) */
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    /* Midpoint: quickly disappear up */
+    100% {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+}
+
+/* This is the simplest way to use this effect if you are NOT using *ngIf */
+.chimney-fade-out {
+    animation: chimney-fade-out 0.6s ease-in-out forwards;
+}
+
+@keyframes chimney-fade-in {
+
+    /* This is the entry starting point (from 50% to 100% is the entry) */
+    0% {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+
+    /* Final resting position */
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* This is the simplest way to use this effect if you are NOT using *ngIf */
+.chimney-fade-in {
+    animation: chimney-fade-in 0.6s ease-in-out forwards;
+}
+
+@keyframes jingle-shake {
+  0% { opacity: 0; transform: translateX(0); }
+  20% { opacity: 0.5; transform: translateX(-5px) rotate(-1deg); }
+  40% { opacity: 1; transform: translateX(5px) rotate(1deg); }
+  60% { transform: translateX(-5px) rotate(-1deg); }
+  80% { transform: translateX(5px) rotate(1deg); }
+  100% { transform: translateX(0); }
+}
+
+.jingle-shake {
+  /* Only runs for a short duration to be a quick 'jingle' */
+  animation: jingle-shake 0.5s ease-in-out;
+}
+
+@keyframes blow-snow {
+    0% {
+        transform: translateX(0) translateY(0) rotate(0deg);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 0.8;
+        /* Fade in */
+    }
+
+    100% {
+        /* Blow from left to right, with some vertical drift and rotation */
+        transform: translateX(120vw) translateY(50vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+.snowflake-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.snowflake {
+    position: absolute;
+    background-color: white;
+    border-radius: 50%;
+    opacity: 0.8;
+    filter: blur(0.5px);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+/* Apply the animation to all snowflakes */
+.snowflake {
+    animation-name: blow-snow;
+    animation-iteration-count: infinite;
+    /* Keeps them blowing forever */
+    animation-timing-function: linear;
+    /* Constant speed for blowing */
+    animation-fill-mode: forwards;
+    /* Stays at end state after one iteration if not infinite */
+}
+
+/* Randomize each snowflake's properties */
+.snowflake:nth-child(1) {
+    width: 5px;
+    height: 5px;
+    top: 10%;
+    left: -5%;
+    animation-duration: 15s;
+    animation-delay: 0s;
+    transform: translateY(0);
+    /* Reset base transform for animation */
+}
+
+.snowflake:nth-child(2) {
+    width: 8px;
+    height: 8px;
+    top: 30%;
+    left: -10%;
+    animation-duration: 20s;
+    animation-delay: 5s;
+    transform: translateY(0);
+}
+
+.snowflake:nth-child(3) {
+    width: 6px;
+    height: 6px;
+    top: 50%;
+    left: -15%;
+    animation-duration: 18s;
+    animation-delay: 10s;
+    transform: translateY(0);
+}
+
+.snowflake:nth-child(4) {
+    width: 7px;
+    height: 7px;
+    top: 20%;
+    left: -20%;
+    animation-duration: 22s;
+    animation-delay: 3s;
+    transform: translateY(0);
+}
+
+.snowflake:nth-child(5) {
+    width: 4px;
+    height: 4px;
+    top: 70%;
+    left: -8%;
+    animation-duration: 17s;
+    animation-delay: 8s;
+    transform: translateY(0);
+}
+
+.snowflake:nth-child(6) {
+    width: 9px;
+    height: 9px;
+    top: 85%;
+    left: -25%;
+    animation-duration: 25s;
+    animation-delay: 12s;
+    transform: translateY(0);
+}
+
+.snowflake:nth-child(7) {
+    width: 5px;
+    height: 5px;
+    top: 15%;
+    left: -30%;
+    animation-duration: 16s;
+    animation-delay: 1s;
+    transform: translateY(0);
+}
+
+.snowflake:nth-child(8) {
+    width: 10px;
+    height: 10px;
+    top: 40%;
+    left: -5%;
+    animation-duration: 21s;
+    animation-delay: 6s;
+    transform: translateY(0);
+}
+
+.snowflake:nth-child(9) {
+    width: 7px;
+    height: 7px;
+    top: 60%;
+    left: -12%;
+    animation-duration: 19s;
+    animation-delay: 11s;
+    transform: translateY(0);
+}
+
+.snowflake:nth-child(10) {
+    width: 4px;
+    height: 4px;
+    top: 5%;
+    left: -18%;
+    animation-duration: 23s;
+    animation-delay: 4s;
+    transform: translateY(0);
+}
+
+.snowflake:nth-child(11) {
+    width: 8px;
+    height: 8px;
+    top: 75%;
+    left: -7%;
+    animation-duration: 17.5s;
+    animation-delay: 9s;
+    transform: translateY(0);
+}
+
+.snowflake:nth-child(12) {
+    width: 6px;
+    height: 6px;
+    top: 90%;
+    left: -22%;
+    animation-duration: 20.5s;
+    animation-delay: 13s;
+    transform: translateY(0);
+}

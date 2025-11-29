@@ -119,19 +119,40 @@ export type LogoutPayload = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  changeMyTriviaPlayerName: TriviaGamePayload;
+  closeTriviaGame: TriviaGamePayload;
   createAppointment: AppointmentPayload;
+  createTriviaGame: TriviaGamePayload;
   login: LoginPayload;
   logout: LogoutPayload;
+  nextTriviaQuestion: TriviaGamePayload;
+  pauseTriviaGame: TriviaGamePayload;
   requestPasswordReset: RequestPasswordResetPayload;
   resendEmailVerification: ResendEmailVerificationPayload;
   resetPassword: ResetPasswordPayload;
+  resumeTriviaGame: TriviaGamePayload;
+  showScoreAfterQuestion: TriviaGamePayload;
+  showScoreImmediately: TriviaGamePayload;
   signUp: SignUpPayload;
+  startTriviaGame: TriviaGamePayload;
+  stopTriviaGame: TriviaGamePayload;
+  submitTriviaAnswer: TriviaGamePayload;
   verifyEmail: VerifyEmailPayload;
+};
+
+
+export type MutationChangeMyTriviaPlayerNameArgs = {
+  newName: Scalars['String']['input'];
 };
 
 
 export type MutationCreateAppointmentArgs = {
   input: AppointmentDetails;
+};
+
+
+export type MutationCreateTriviaGameArgs = {
+  gameId: Scalars['ID']['input'];
 };
 
 
@@ -160,6 +181,16 @@ export type MutationSignUpArgs = {
 };
 
 
+export type MutationStartTriviaGameArgs = {
+  gameId: Scalars['ID']['input'];
+};
+
+
+export type MutationSubmitTriviaAnswerArgs = {
+  answer: TriviaAnswer;
+};
+
+
 export type MutationVerifyEmailArgs = {
   code: Scalars['Int']['input'];
   email: Scalars['EmailAddress']['input'];
@@ -178,6 +209,12 @@ export type PageInfo = {
   totalCount: Scalars['Int']['output'];
 };
 
+export type PlayerScore = {
+  __typename?: 'PlayerScore';
+  playerName: Scalars['String']['output'];
+  score: Scalars['Int']['output'];
+};
+
 export enum PriorityDirection {
   Asc = 'ASC',
   Desc = 'DESC'
@@ -189,6 +226,8 @@ export type Query = {
   allAvailabilityBlocks: Array<AvailabilityBlock>;
   availabilityBlocks: Array<AvailabilityBlock>;
   availableTimeSlots: Array<Maybe<TimeSlot>>;
+  currentGame?: Maybe<TriviaGame>;
+  myTriviaScore: Array<TriviaPlayerScore>;
   self?: Maybe<User>;
   users?: Maybe<UserConnection>;
 };
@@ -317,10 +356,106 @@ export enum SortDirection {
   Desc = 'DESC'
 }
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  joinTriviaGameAsAdmin: TriviaGameUpdateForAdmin;
+  joinTriviaGameAsBoard: TriviaGameUpdateForBoard;
+  joinTriviaGameAsPlayer: TriviaGameUpdateForPlayer;
+};
+
 export type TimeSlot = {
   __typename?: 'TimeSlot';
   end?: Maybe<Scalars['DateTime']['output']>;
   start?: Maybe<Scalars['DateTime']['output']>;
+};
+
+export enum TriviaAnswer {
+  A = 'A',
+  B = 'B',
+  C = 'C',
+  D = 'D'
+}
+
+export type TriviaGame = {
+  __typename?: 'TriviaGame';
+  id: Scalars['ID']['output'];
+};
+
+export type TriviaGameError = GenericError & {
+  __typename?: 'TriviaGameError';
+  code?: Maybe<TriviaGameErrorCodes>;
+  message?: Maybe<Scalars['String']['output']>;
+};
+
+export enum TriviaGameErrorCodes {
+  GameAlreadyExists = 'GAME_ALREADY_EXISTS',
+  GameNotFound = 'GAME_NOT_FOUND',
+  InsufficientPermissions = 'INSUFFICIENT_PERMISSIONS',
+  UnknownError = 'UNKNOWN_ERROR'
+}
+
+export type TriviaGamePayload = {
+  __typename?: 'TriviaGamePayload';
+  error?: Maybe<TriviaGameError>;
+  success: Scalars['Boolean']['output'];
+};
+
+export type TriviaGameScore = {
+  __typename?: 'TriviaGameScore';
+  category: Scalars['String']['output'];
+  scores: Array<PlayerScore>;
+};
+
+export enum TriviaGameState {
+  Answer = 'ANSWER',
+  Closed = 'CLOSED',
+  Paused = 'PAUSED',
+  Question = 'QUESTION',
+  Score = 'SCORE',
+  Splash = 'SPLASH',
+  Stopped = 'STOPPED'
+}
+
+export type TriviaGameUpdateForAdmin = {
+  __typename?: 'TriviaGameUpdateForAdmin';
+  question?: Maybe<TriviaQuestion>;
+  state: TriviaGameState;
+  time?: Maybe<Scalars['Int']['output']>;
+};
+
+export type TriviaGameUpdateForBoard = {
+  __typename?: 'TriviaGameUpdateForBoard';
+  question?: Maybe<TriviaQuestion>;
+  scores?: Maybe<Array<TriviaGameScore>>;
+  state: TriviaGameState;
+  time?: Maybe<Scalars['Int']['output']>;
+};
+
+export type TriviaGameUpdateForPlayer = {
+  __typename?: 'TriviaGameUpdateForPlayer';
+  question?: Maybe<TriviaQuestion>;
+  state: TriviaGameState;
+  time?: Maybe<Scalars['Int']['output']>;
+};
+
+export type TriviaOption = {
+  __typename?: 'TriviaOption';
+  option: TriviaAnswer;
+  text: Scalars['String']['output'];
+};
+
+export type TriviaPlayerScore = {
+  __typename?: 'TriviaPlayerScore';
+  category: Scalars['String']['output'];
+  score: Scalars['Int']['output'];
+};
+
+export type TriviaQuestion = {
+  __typename?: 'TriviaQuestion';
+  category: Scalars['String']['output'];
+  correctAnswer?: Maybe<TriviaAnswer>;
+  options: Array<TriviaOption>;
+  question: Scalars['String']['output'];
 };
 
 export type User = {
@@ -446,6 +581,94 @@ export type ResendEmailVerificationMutationVariables = Exact<{
 
 
 export type ResendEmailVerificationMutation = { __typename?: 'Mutation', resendEmailVerification: { __typename?: 'ResendEmailVerificationPayload', success: boolean, error?: { __typename?: 'ResendEmailVerificationError', code?: ResendEmailVerificationErrorCodes | null, message?: string | null } | null } };
+
+export type SubmitTriviaAnswerMutationVariables = Exact<{
+  answer: TriviaAnswer;
+}>;
+
+
+export type SubmitTriviaAnswerMutation = { __typename?: 'Mutation', submitTriviaAnswer: { __typename?: 'TriviaGamePayload', success: boolean, error?: { __typename?: 'TriviaGameError', code?: TriviaGameErrorCodes | null, message?: string | null } | null } };
+
+export type JoinTriviaGameAsPlayerSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type JoinTriviaGameAsPlayerSubscription = { __typename?: 'Subscription', joinTriviaGameAsPlayer: { __typename?: 'TriviaGameUpdateForPlayer', state: TriviaGameState, time?: number | null, question?: { __typename?: 'TriviaQuestion', question: string, correctAnswer?: TriviaAnswer | null, category: string, options: Array<{ __typename?: 'TriviaOption', option: TriviaAnswer, text: string }> } | null } };
+
+export type CurrentGameQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CurrentGameQuery = { __typename?: 'Query', currentGame?: { __typename?: 'TriviaGame', id: string } | null };
+
+export type ChangeMyTriviaPlayerNameMutationVariables = Exact<{
+  newName: Scalars['String']['input'];
+}>;
+
+
+export type ChangeMyTriviaPlayerNameMutation = { __typename?: 'Mutation', changeMyTriviaPlayerName: { __typename?: 'TriviaGamePayload', success: boolean, error?: { __typename?: 'TriviaGameError', code?: TriviaGameErrorCodes | null, message?: string | null } | null } };
+
+export type CreateTriviaGameMutationVariables = Exact<{
+  gameId: Scalars['ID']['input'];
+}>;
+
+
+export type CreateTriviaGameMutation = { __typename?: 'Mutation', createTriviaGame: { __typename?: 'TriviaGamePayload', success: boolean, error?: { __typename?: 'TriviaGameError', code?: TriviaGameErrorCodes | null, message?: string | null } | null } };
+
+export type StartTriviaGameMutationVariables = Exact<{
+  gameId: Scalars['ID']['input'];
+}>;
+
+
+export type StartTriviaGameMutation = { __typename?: 'Mutation', startTriviaGame: { __typename?: 'TriviaGamePayload', success: boolean, error?: { __typename?: 'TriviaGameError', code?: TriviaGameErrorCodes | null, message?: string | null } | null } };
+
+export type NextTriviaQuestionMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type NextTriviaQuestionMutation = { __typename?: 'Mutation', nextTriviaQuestion: { __typename?: 'TriviaGamePayload', success: boolean, error?: { __typename?: 'TriviaGameError', code?: TriviaGameErrorCodes | null, message?: string | null } | null } };
+
+export type PauseTriviaGameMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PauseTriviaGameMutation = { __typename?: 'Mutation', pauseTriviaGame: { __typename?: 'TriviaGamePayload', success: boolean, error?: { __typename?: 'TriviaGameError', code?: TriviaGameErrorCodes | null, message?: string | null } | null } };
+
+export type ResumeTriviaGameMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ResumeTriviaGameMutation = { __typename?: 'Mutation', resumeTriviaGame: { __typename?: 'TriviaGamePayload', success: boolean, error?: { __typename?: 'TriviaGameError', code?: TriviaGameErrorCodes | null, message?: string | null } | null } };
+
+export type CloseTriviaGameMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CloseTriviaGameMutation = { __typename?: 'Mutation', closeTriviaGame: { __typename?: 'TriviaGamePayload', success: boolean, error?: { __typename?: 'TriviaGameError', code?: TriviaGameErrorCodes | null, message?: string | null } | null } };
+
+export type StopTriviaGameMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type StopTriviaGameMutation = { __typename?: 'Mutation', stopTriviaGame: { __typename?: 'TriviaGamePayload', success: boolean, error?: { __typename?: 'TriviaGameError', code?: TriviaGameErrorCodes | null, message?: string | null } | null } };
+
+export type ShowScoreAfterQuestionMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ShowScoreAfterQuestionMutation = { __typename?: 'Mutation', showScoreAfterQuestion: { __typename?: 'TriviaGamePayload', success: boolean, error?: { __typename?: 'TriviaGameError', code?: TriviaGameErrorCodes | null, message?: string | null } | null } };
+
+export type ShowScoreImmediatelyMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ShowScoreImmediatelyMutation = { __typename?: 'Mutation', showScoreImmediately: { __typename?: 'TriviaGamePayload', success: boolean, error?: { __typename?: 'TriviaGameError', code?: TriviaGameErrorCodes | null, message?: string | null } | null } };
+
+export type JoinTriviaGameAsAdminSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type JoinTriviaGameAsAdminSubscription = { __typename?: 'Subscription', joinTriviaGameAsAdmin: { __typename?: 'TriviaGameUpdateForAdmin', state: TriviaGameState, time?: number | null, question?: { __typename?: 'TriviaQuestion', question: string, correctAnswer?: TriviaAnswer | null, category: string, options: Array<{ __typename?: 'TriviaOption', option: TriviaAnswer, text: string }> } | null } };
+
+export type JoinTriviaGameAsBoardSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type JoinTriviaGameAsBoardSubscription = { __typename?: 'Subscription', joinTriviaGameAsBoard: { __typename?: 'TriviaGameUpdateForBoard', state: TriviaGameState, time?: number | null, question?: { __typename?: 'TriviaQuestion', question: string, correctAnswer?: TriviaAnswer | null, category: string, options: Array<{ __typename?: 'TriviaOption', option: TriviaAnswer, text: string }> } | null, scores?: Array<{ __typename?: 'TriviaGameScore', category: string, scores: Array<{ __typename?: 'PlayerScore', playerName: string, score: number }> }> | null } };
+
+export type MyTriviaScoreQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyTriviaScoreQuery = { __typename?: 'Query', myTriviaScore: Array<{ __typename?: 'TriviaPlayerScore', category: string, score: number }> };
 
 export type AvailabilityBlocksQueryVariables = Exact<{
   durationInMinutes: Scalars['Int']['input'];
@@ -667,6 +890,376 @@ export const ResendEmailVerificationDocument = gql`
   })
   export class ResendEmailVerificationGQL extends Apollo.Mutation<ResendEmailVerificationMutation, ResendEmailVerificationMutationVariables> {
     document = ResendEmailVerificationDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const SubmitTriviaAnswerDocument = gql`
+    mutation SubmitTriviaAnswer($answer: TriviaAnswer!) {
+  submitTriviaAnswer(answer: $answer) {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class SubmitTriviaAnswerGQL extends Apollo.Mutation<SubmitTriviaAnswerMutation, SubmitTriviaAnswerMutationVariables> {
+    document = SubmitTriviaAnswerDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const JoinTriviaGameAsPlayerDocument = gql`
+    subscription JoinTriviaGameAsPlayer {
+  joinTriviaGameAsPlayer {
+    state
+    question {
+      question
+      options {
+        option
+        text
+      }
+      correctAnswer
+      category
+    }
+    time
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class JoinTriviaGameAsPlayerGQL extends Apollo.Subscription<JoinTriviaGameAsPlayerSubscription, JoinTriviaGameAsPlayerSubscriptionVariables> {
+    document = JoinTriviaGameAsPlayerDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CurrentGameDocument = gql`
+    query CurrentGame {
+  currentGame {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CurrentGameGQL extends Apollo.Query<CurrentGameQuery, CurrentGameQueryVariables> {
+    document = CurrentGameDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const ChangeMyTriviaPlayerNameDocument = gql`
+    mutation ChangeMyTriviaPlayerName($newName: String!) {
+  changeMyTriviaPlayerName(newName: $newName) {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ChangeMyTriviaPlayerNameGQL extends Apollo.Mutation<ChangeMyTriviaPlayerNameMutation, ChangeMyTriviaPlayerNameMutationVariables> {
+    document = ChangeMyTriviaPlayerNameDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateTriviaGameDocument = gql`
+    mutation CreateTriviaGame($gameId: ID!) {
+  createTriviaGame(gameId: $gameId) {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateTriviaGameGQL extends Apollo.Mutation<CreateTriviaGameMutation, CreateTriviaGameMutationVariables> {
+    document = CreateTriviaGameDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const StartTriviaGameDocument = gql`
+    mutation StartTriviaGame($gameId: ID!) {
+  startTriviaGame(gameId: $gameId) {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class StartTriviaGameGQL extends Apollo.Mutation<StartTriviaGameMutation, StartTriviaGameMutationVariables> {
+    document = StartTriviaGameDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const NextTriviaQuestionDocument = gql`
+    mutation NextTriviaQuestion {
+  nextTriviaQuestion {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class NextTriviaQuestionGQL extends Apollo.Mutation<NextTriviaQuestionMutation, NextTriviaQuestionMutationVariables> {
+    document = NextTriviaQuestionDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const PauseTriviaGameDocument = gql`
+    mutation PauseTriviaGame {
+  pauseTriviaGame {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class PauseTriviaGameGQL extends Apollo.Mutation<PauseTriviaGameMutation, PauseTriviaGameMutationVariables> {
+    document = PauseTriviaGameDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const ResumeTriviaGameDocument = gql`
+    mutation ResumeTriviaGame {
+  resumeTriviaGame {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ResumeTriviaGameGQL extends Apollo.Mutation<ResumeTriviaGameMutation, ResumeTriviaGameMutationVariables> {
+    document = ResumeTriviaGameDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CloseTriviaGameDocument = gql`
+    mutation CloseTriviaGame {
+  closeTriviaGame {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CloseTriviaGameGQL extends Apollo.Mutation<CloseTriviaGameMutation, CloseTriviaGameMutationVariables> {
+    document = CloseTriviaGameDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const StopTriviaGameDocument = gql`
+    mutation StopTriviaGame {
+  stopTriviaGame {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class StopTriviaGameGQL extends Apollo.Mutation<StopTriviaGameMutation, StopTriviaGameMutationVariables> {
+    document = StopTriviaGameDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const ShowScoreAfterQuestionDocument = gql`
+    mutation ShowScoreAfterQuestion {
+  showScoreAfterQuestion {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ShowScoreAfterQuestionGQL extends Apollo.Mutation<ShowScoreAfterQuestionMutation, ShowScoreAfterQuestionMutationVariables> {
+    document = ShowScoreAfterQuestionDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const ShowScoreImmediatelyDocument = gql`
+    mutation ShowScoreImmediately {
+  showScoreImmediately {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ShowScoreImmediatelyGQL extends Apollo.Mutation<ShowScoreImmediatelyMutation, ShowScoreImmediatelyMutationVariables> {
+    document = ShowScoreImmediatelyDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const JoinTriviaGameAsAdminDocument = gql`
+    subscription JoinTriviaGameAsAdmin {
+  joinTriviaGameAsAdmin {
+    state
+    question {
+      question
+      options {
+        option
+        text
+      }
+      correctAnswer
+      category
+    }
+    time
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class JoinTriviaGameAsAdminGQL extends Apollo.Subscription<JoinTriviaGameAsAdminSubscription, JoinTriviaGameAsAdminSubscriptionVariables> {
+    document = JoinTriviaGameAsAdminDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const JoinTriviaGameAsBoardDocument = gql`
+    subscription JoinTriviaGameAsBoard {
+  joinTriviaGameAsBoard {
+    state
+    question {
+      question
+      options {
+        option
+        text
+      }
+      correctAnswer
+      category
+    }
+    scores {
+      category
+      scores {
+        playerName
+        score
+      }
+    }
+    time
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class JoinTriviaGameAsBoardGQL extends Apollo.Subscription<JoinTriviaGameAsBoardSubscription, JoinTriviaGameAsBoardSubscriptionVariables> {
+    document = JoinTriviaGameAsBoardDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const MyTriviaScoreDocument = gql`
+    query MyTriviaScore {
+  myTriviaScore {
+    category
+    score
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class MyTriviaScoreGQL extends Apollo.Query<MyTriviaScoreQuery, MyTriviaScoreQueryVariables> {
+    document = MyTriviaScoreDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

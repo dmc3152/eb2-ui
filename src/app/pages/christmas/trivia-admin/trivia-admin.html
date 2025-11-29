@@ -1,0 +1,68 @@
+<div class="trivia-admin">
+    <mat-card appearance="filled">
+        <mat-card-header class="header-with-action">
+            <mat-card-title-group>
+                <mat-card-title>Christmas Trivia Admin Page</mat-card-title>
+            </mat-card-title-group>
+        </mat-card-header>
+        <mat-card-content>
+            @let currentGameId = gameId();
+            @let state = gameState.value()?.state;
+            <p>
+                @if (currentGameId) {
+                <b>Game Id:</b> {{ currentGameId }}<br>
+                }
+                <b>Game State:</b>
+                @if (state) { {{ state }} }
+                @else { No Game }
+            </p>
+            @let triviaQuestion = gameState.value()?.question;
+            @if (triviaQuestion) {
+            <p><b>Question:</b> {{ triviaQuestion.question }}</p>
+            }
+
+            @if (!gameId()) {
+            <h3>Start Game</h3>
+            <form id="startGameForm" [formGroup]="startGameForm" class="start-game-form">
+                <mat-form-field class="full-width">
+                    <mat-label>Game ID</mat-label>
+                    <input matInput formControlName="gameId" placeholder="Ex. eb2-ward-party">
+                    @if (startGameForm.controls.gameId.hasError('required')) {
+                    <mat-error>Game ID is required</mat-error>
+                    }
+                </mat-form-field>
+                <button matButton="filled" (click)="startGame()">Start Game</button>
+            </form>
+            }
+            @else {
+            <h3>Game Actions</h3>
+            <div class="actions">
+                <button matButton="filled" (click)="nextQuestion()">Next Question</button>
+                @if (state !== "SCORE") {
+                <button matButton="filled" (click)="pauseGame()">Pause Game</button>
+                <button matButton="filled" (click)="resumeGame()">Resume Game</button>
+                <button matButton="filled" (click)="showScoreAfterQuestion()">Show Score After Question</button>
+                <button matButton="filled" (click)="showScoreImmediately()">Show Score Immediately</button>
+                }
+                <button matButton="filled" (click)="stopGame()">Stop Game</button>
+                <button matButton="filled" (click)="closeGame()">End Game</button>
+            </div>
+            }
+
+            <h3>Create Game</h3>
+            <form id="createGameForm" [formGroup]="createGameForm" class="create-game-form">
+                <mat-form-field class="full-width">
+                    <mat-label>Game ID</mat-label>
+                    <input matInput formControlName="gameId" placeholder="Ex. eb2-ward-party">
+                    @if (createGameForm.controls.gameId.hasError('required')) {
+                    <mat-error>Game ID is required</mat-error>
+                    }
+                </mat-form-field>
+                <button matButton="filled" (click)="createGame()">Create Game</button>
+            </form>
+        </mat-card-content>
+        <!-- <mat-card-actions align="end">
+            <button matButton="filled" [disabled]="questionForm.invalid" type="submit" form="questionForm">Submit Answer</button>
+        </mat-card-actions> -->
+    </mat-card>
+</div>

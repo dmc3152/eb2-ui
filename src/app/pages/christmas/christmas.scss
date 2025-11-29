@@ -1,0 +1,18 @@
+.christmas-wrapper {
+    height: 100%;
+    width: 100%;
+    background-image:
+        radial-gradient(
+            circle at center, /* Shape & Start Point */
+            rgba(0, 0, 0, 0.4) 0%, /* Center is transparent (0% opacity) */
+            rgba(0, 0, 0, 0.7) 60%, /* Starts getting dark */
+            rgba(0, 0, 0, 0.9) 100% /* Edges are very dark */
+        ),
+        url('../../../../public/christmas-background.jpg');
+    background-size: cover;
+    background-position: center;
+    max-height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}

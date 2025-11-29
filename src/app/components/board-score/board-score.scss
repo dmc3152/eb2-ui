@@ -1,0 +1,28 @@
+// :host {
+//     display: flex;
+//     flex-direction: column;
+//     // overflow: hidden;
+//     max-height: 90%;
+//     // height: 100%;
+//     // width: 100%;
+// }
+
+.chart-container {
+    // display: flex;
+    // flex-direction: column;
+    // flex: 1;
+    // overflow: hidden;
+    // max-height: 90%;
+    // height: 400px;
+    height: 80vh;
+}
+
+canvas {
+    // // display: flex;
+    // flex: 1;
+    // // overflow: hidden;
+    // max-height: 100%;
+    // // height: 400px;
+    // height: 90%;
+    // // width: 100%;
+}

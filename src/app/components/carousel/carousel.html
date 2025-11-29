@@ -1,0 +1,25 @@
+<div class="carousel-container">
+    <button class="nav-button prev" (click)="goPrevious()" [disabled]="selectedIndex === 0">&#10094;</button>
+
+    <div class="cdk-stepper-content">
+        <div class="slide-wrapper" 
+            [style.transitionDuration.ms]="transitionSpeed"
+            [style.transform]="'translateX(' + (selectedIndex * -100) + '%)'">
+            
+        @for (step of steps; track $index; let i = $index) {
+            <div class="slide-content-item">
+                <ng-container [ngTemplateOutlet]="step.content"></ng-container>
+            </div>
+        }
+        
+        </div>
+    </div>
+
+    <button class="nav-button next" (click)="goNext()" [disabled]="selectedIndex === steps.length - 1">&#10095;</button>
+
+    <!-- <div class="indicators">
+        @for (step of steps; track $index; let i = $index) {
+        <button (click)="goTo(i)" [class.active]="i === selectedIndex"></button>
+        }
+    </div> -->
+</div>

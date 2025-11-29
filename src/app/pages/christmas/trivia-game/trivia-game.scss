@@ -1,0 +1,118 @@
+@use '@angular/material' as mat;
+
+.trivia-game {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+    // margin-top: 10%;
+    padding: 16px;
+}
+
+.trivia-join-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+mat-card.mat-mdc-card-filled {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.header-with-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    /* Aligns button to top if title wraps */
+}
+
+/* Optional: Ensure the title group takes up available space */
+mat-card-title-group {
+    flex: 1;
+}
+
+:host {
+  @include mat.card-overrides((
+    subtitle-text-size: 10pt,
+    subtitle-text-line-height: 12pt
+  ));
+}
+
+.question-category {
+    font-size: smaller;
+    margin-top: 0;
+}
+
+.question-text {
+    font-size: x-large;
+    line-height: normal;
+    margin-bottom: 4px;
+}
+
+mat-radio-group {
+    display: flex;
+    flex-direction: column;
+}
+
+@keyframes show-correct-answer {
+    // from {
+    //     border-color: grey;
+    //     background-color: rgba(0, 0, 0, 0.4);
+    //     transform: scale(1);
+    // }
+
+    to {
+        // color: rgb(0, 158, 0);
+        // border-color: rgb(0, 158, 0);
+        // background-color: rgb(0, 158, 0);
+        // font-weight: 600;
+        // disabled-selected-icon-color: green,
+        // disabled-unselected-icon-color: green,
+        // disabled-unselected-icon-opacity: 1,
+        // disabled-selected-icon-opacity: 1,
+        // unselected-icon-color: green,
+        // selected-icon-color: green,
+        // label-text-weight: 600
+        transform: scale(1.1);
+    }
+}
+
+.correct-answer {
+    @include mat.radio-overrides((
+        disabled-label-color: green,
+        disabled-selected-icon-color: green,
+        disabled-unselected-icon-color: green,
+        disabled-unselected-icon-opacity: 1,
+        disabled-selected-icon-opacity: 1,
+        unselected-icon-color: green,
+        selected-icon-color: green,
+        label-text-weight: 600
+    ));
+
+    // transition: all 0.4s ease-in;
+    transform-origin: left;
+    animation: show-correct-answer 0.3s ease-in forwards;
+}
+
+.wrong-answer:not(.correct-answer) {
+    @include mat.radio-overrides((
+        disabled-label-color: var(--mat-sys-error),
+        disabled-selected-icon-color: var(--mat-sys-error),
+        disabled-unselected-icon-color: var(--mat-sys-error),
+        disabled-unselected-icon-opacity: 1,
+        disabled-selected-icon-opacity: 1,
+        unselected-icon-color: var(--mat-sys-error),
+        selected-icon-color: var(--mat-sys-error),
+        label-text-weight: 500
+    ));
+
+    transition: all 0.4s ease-in;
+}
+
+mat-card-actions {
+    display: flex;
+}
+
+.spacer {
+    flex: 1;
+}

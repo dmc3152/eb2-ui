@@ -29,7 +29,13 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "typeCheckHostBindings": true,
-    "strictTemplates": true
+    "strictTemplates": true,
+    "extendedDiagnostics": {
+      "checks": {
+        // NG8113 is the code for "Unused Standalone Imports"
+        "unusedStandaloneImports": "suppress"
+      }
+    }
   },
   "files": [],
   "references": [

@@ -1,0 +1,35 @@
+<div class="timer-container"
+    [style.width.px]="size()"
+    [style.height.px]="size()">
+    
+    <!-- SVG Ring -->
+    <svg [attr.width]="size()" [attr.height]="size()" class="timer-svg">
+        <!-- Background Track (Light Gray Circle) -->
+        <circle
+            [attr.cx]="center()"
+            [attr.cy]="center()"
+            [attr.r]="radius()"
+            [attr.stroke-width]="strokeWidth()"
+            fill="transparent"
+            class="ring-track"
+        ></circle>
+        
+        <!-- Foreground Progress (Dynamic Color Circle) -->
+        <circle
+            [attr.cx]="center()"
+            [attr.cy]="center()"
+            [attr.r]="radius()"
+            [attr.stroke-width]="strokeWidth()"
+            fill="transparent"
+            [attr.stroke-dasharray]="circumference()"
+            [attr.stroke-dashoffset]="dashOffset()"
+            [class]="colorClass()"
+            class="ring-progress"
+        ></circle>
+    </svg>
+
+    <!-- Center Text -->
+    <div class="center-content">
+        <span class="time-main" [style.font-size.px]="fontSize()" [class]="fontColorClass()">{{ displayTime() }}</span>
+    </div>
+</div>

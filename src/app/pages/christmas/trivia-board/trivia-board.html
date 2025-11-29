@@ -1,0 +1,91 @@
+<div class="trivia-game-board">
+    <mat-card appearance="filled">
+        <mat-card-header class="header-with-action">
+            <mat-card-title>EB2 Ward Christmas Trivia</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="question-wrapper">
+                @let currentState = gameState()?.state;
+                @if (currentState === 'SPLASH') {
+                    <div class="message-wrapper">
+                        <span class="message">Waiting for the game to start</span>
+                    </div>
+                }
+                @else if (currentState === 'PAUSED') {
+                    <div class="message-wrapper">
+                        <span class="message">The game is paused</span>
+                    </div>
+                }
+                @else if (currentState === 'SCORE') {
+                    <!-- <span>Score</span> -->
+                    <!-- <div> -->
+                    @let scores = boardScores();
+                    <app-carousel [transitionSpeed]="500">
+                    @for (score of scores; track $index) {
+                        <cdk-step [label]="score.category">
+                            <!-- <div style="height: 100%; width: 100%;"> -->
+                                <h3>{{score.category}}</h3>
+                                <app-board-score [data]="score"></app-board-score>
+                            <!-- </div> -->
+                        </cdk-step>
+                    <!-- <div style="background-color: white; height: fit-content; width: 100%;"> -->
+                        <!-- <app-board-score [data]="score"></app-board-score> -->
+                    <!-- </div> -->
+                    }
+                    </app-carousel>
+                    <!-- </div> -->
+                }
+                @else if (currentState === 'QUESTION') {
+                    <p class="question-category"><span class="question-category-label">Category:</span> {{gameState()?.question?.category}}</p>
+                    <div class="question-container" [animate.enter]="enterAnimation()">
+                        <p class="question-text">{{gameState()?.question?.question}}</p>
+                        <div class="question-option-list">
+                            @for (option of gameState()?.question?.options; track option.option) {
+                            <span>{{option.option}}. {{option.text}}</span>
+                            }
+                        </div>
+                    </div>
+                }
+                @else if (currentState === 'ANSWER') {
+                    <p class="question-category"><span class="question-category-label">Category:</span> {{gameState()?.question?.category}}</p>
+                    <div class="question-container" animate.leave="snowflake-out">
+                        <p class="question-text">{{gameState()?.question?.question}}</p>
+                        <div class="question-option-list">
+                            @for (option of gameState()?.question?.options; track option.option) {
+                            <span [ngClass]="{'correct-answer': gameState()?.question?.correctAnswer === option.option}">
+                                {{option.option}}. {{option.text}}
+                            </span>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+            <!-- <div class="footer">
+                @let duration = time();
+                @if (duration) {
+                <app-ring-timer #timer [duration]="duration" [size]="120" [strokeWidth]="8" [fontColorClass]="'font-color-dark-background'"></app-ring-timer>
+                }
+                <div class="spacer"></div>
+                <div class="qr-code">
+                    <span>Scan to join</span>
+                    <qrcode [qrdata]="'http://localhost:4200/christmas/join-trivia-game'" [width]="128" [errorCorrectionLevel]="'M'"></qrcode>
+                </div>
+            </div> -->
+        </mat-card-content>
+    </mat-card>
+</div>
+
+<div class="snowflake-container">
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+</div>

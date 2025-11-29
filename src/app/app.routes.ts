@@ -1,6 +1,7 @@
 import { inject } from '@angular/core';
-import { Routes } from '@angular/router';
+import { ActivatedRoute, Router, Routes } from '@angular/router';
 import { AuthService } from '@core/auth';
+import { TriviaGameService } from '@core/trivia-game';
 
 export const routes: Routes = [
     {
@@ -47,6 +48,62 @@ export const routes: Routes = [
             {
                 path: 'verifyEmail',
                 loadComponent: () => import('./pages/auth/verify-email/verify-email').then(m => m.VerifyEmailPage)
+            },
+        ]
+    },
+    {
+        path: 'christmas',
+        loadComponent: () => import('./pages/christmas/christmas').then(m => m.ChristmasWrapper),
+        children: [
+            {
+                path: '',
+                pathMatch: 'full',
+                redirectTo: 'trivia-game'
+            },
+            {
+                title: 'Trivia Game',
+                path: 'trivia-game',
+                loadComponent: () => import('./pages/christmas/trivia-game/trivia-game').then(m => m.TriviaGame),
+                canActivate: [
+                    async () => {
+                        const router = inject(Router);
+                        const triviaGame = inject(TriviaGameService);
+                        const authenticatedUser = triviaGame.authenticatedUser();
+                        if (authenticatedUser) return true;
+                        return router.createUrlTree(['christmas/join-trivia-game']);
+                    }
+                ]
+            },
+            {
+                title: "Join Trivia Game",
+                path: 'join-trivia-game',
+                loadComponent: () => import('./pages/christmas/join-trivia-game/join-trivia-game').then(m => m.JoinTriviaGame),
+            },
+            {
+                title: 'Trivia Admin Panel',
+                path: 'trivia-admin',
+                loadComponent: () => import('./pages/christmas/trivia-admin/trivia-admin').then(m => m.TriviaAdmin),
+                canActivate: [
+                    async () => {
+                        const authService = inject(AuthService);
+                        const authenticatedUser = authService.authenticatedUser();
+                        if (authenticatedUser?.isSiteAdmin) return true;
+                        return false;
+                    }
+                ]
+            },
+            {
+                title: 'Trivia Board',
+                path: 'trivia-board',
+                loadComponent: () => import('./pages/christmas/trivia-board/trivia-board').then(m => m.TriviaBoard),
+                canActivate: [
+                    async () => {
+                        const authService = inject(AuthService);
+                        const authenticatedUser = authService.authenticatedUser();
+                        if (authenticatedUser?.isSiteAdmin) return true;
+                        return false;
+                    }
+                ]
             },
         ]
     },

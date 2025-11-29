@@ -1,0 +1,71 @@
+<div class="trivia-game">
+    <mat-card appearance="filled">
+        <mat-card-header class="header-with-action">
+            <mat-card-title-group>
+                <mat-card-title>Christmas Trivia</mat-card-title>
+                <mat-card-subtitle>{{ gameId() }}</mat-card-subtitle>
+                <mat-card-subtitle><b>Name:</b> {{authenticatedUser()?.name}}</mat-card-subtitle>
+            </mat-card-title-group>
+
+            <button matIconButton [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
+        </mat-card-header>
+        @let currentState = gameState()?.state;
+        @if (currentState === 'SPLASH') {
+            <mat-card-content>
+                <h2>Waiting for the game to start</h2>
+            </mat-card-content>
+        }
+        @if (currentState === 'PAUSED') {
+            <mat-card-content>
+                <h2>The game is paused</h2>
+            </mat-card-content>
+        }
+        @if (currentState === 'SCORE') {
+            <mat-card-content>
+                <h2>Score</h2>
+                <app-player-score [data]="playerScores()"></app-player-score>
+            </mat-card-content>
+        }
+        @else if (currentState && ['QUESTION', 'ANSWER'].includes(currentState)) {
+        <mat-card-content>
+            <p class="question-text">{{gameState()?.question?.question}}</p>
+            <p class="question-category"><b>Category:</b> {{gameState()?.question?.category}}</p>
+            <form id="questionForm" [formGroup]="questionForm" (ngSubmit)="submit()">
+                <mat-radio-group formControlName="triviaAnswer">
+                    @for (option of gameState()?.question?.options; track option.option) {
+                    <mat-radio-button
+                        [value]="option.option"
+                        [ngClass]="{'correct-answer': gameState()?.question?.correctAnswer === option.option, 'wrong-answer': answerSubmitted() === option.option && currentState === 'ANSWER'}"
+                    >
+                        {{option.option}}. {{option.text}}
+                    </mat-radio-button>
+                    }
+                </mat-radio-group>
+            </form>
+        </mat-card-content>
+        <mat-card-actions>
+            @let duration = time();
+            @if (duration) {
+            <app-ring-timer #timer [duration]="duration" [size]="30" [strokeWidth]="4"></app-ring-timer>
+            }
+            <div class="spacer"></div>
+            <button matButton="filled" [disabled]="questionForm.invalid || answerSubmitted() || currentState === 'ANSWER'" type="submit" form="questionForm">Submit Answer</button>
+        </mat-card-actions>
+        }
+    </mat-card>
+</div>
+
+<mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="showScore()">
+        <mat-icon>leaderboard</mat-icon>
+        <span>View Score</span>
+    </button>
+    <a mat-menu-item routerLink="/christmas/join-trivia-game">
+        <mat-icon>edit</mat-icon>
+        <span>Change Name</span>
+    </a>
+    <a mat-menu-item routerLink="/">
+        <mat-icon>exit_to_app</mat-icon>
+        <span>Leave Game</span>
+    </a>
+</mat-menu>

@@ -1,0 +1,177 @@
+mutation SubmitTriviaAnswer($answer: TriviaAnswer!) {
+  submitTriviaAnswer(answer: $answer) {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+
+subscription JoinTriviaGameAsPlayer {
+  joinTriviaGameAsPlayer {
+    state
+    question {
+      question
+      options {
+        option
+        text
+      }
+      correctAnswer
+      category
+    }
+    time
+  }
+}
+
+query CurrentGame {
+  currentGame {
+    id
+  }
+}
+
+mutation ChangeMyTriviaPlayerName($newName: String!) {
+  changeMyTriviaPlayerName(newName: $newName) {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+
+mutation CreateTriviaGame($gameId: ID!) {
+  createTriviaGame(gameId: $gameId) {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+
+mutation StartTriviaGame($gameId: ID!) {
+  startTriviaGame(gameId: $gameId) {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+
+mutation NextTriviaQuestion {
+  nextTriviaQuestion {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+
+mutation PauseTriviaGame {
+  pauseTriviaGame {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+
+mutation ResumeTriviaGame {
+  resumeTriviaGame {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+
+mutation CloseTriviaGame {
+  closeTriviaGame {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+
+mutation StopTriviaGame {
+  stopTriviaGame {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+
+mutation ShowScoreAfterQuestion {
+  showScoreAfterQuestion {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+
+mutation ShowScoreImmediately {
+  showScoreImmediately {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+
+subscription JoinTriviaGameAsAdmin {
+  joinTriviaGameAsAdmin {
+    state
+    question {
+      question
+      options {
+        option
+        text
+      }
+      correctAnswer
+      category
+    }
+    time
+  }
+}
+
+subscription JoinTriviaGameAsBoard {
+  joinTriviaGameAsBoard {
+    state
+    question {
+      question
+      options {
+        option
+        text
+      }
+      correctAnswer
+      category
+    }
+    scores {
+      category
+      scores {
+        playerName
+        score
+      }
+    }
+    time
+  }
+}
+
+query MyTriviaScore {
+  myTriviaScore {
+    category
+    score
+  }
+}

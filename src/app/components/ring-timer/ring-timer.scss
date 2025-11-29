@@ -1,0 +1,67 @@
+/* Host element */
+:host {
+    display: block;
+}
+
+/* Equivalent to: relative flex items-center justify-center select-none */
+.timer-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+}
+
+/* Equivalent to: transform -rotate-90 transition-all */
+.timer-svg {
+    transform: rotate(-90deg);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Equivalent to: stroke-gray-200 */
+.ring-track {
+    stroke: #e5e7eb; /* Light Gray */
+}
+
+/* Common styles for the progress ring and transition */
+.ring-progress {
+    transition: stroke 0.3s ease-in-out;
+    stroke-linecap: round;
+    fill: transparent; /* Explicitly ensure fill is transparent */
+}
+
+/* Dynamic Color States */
+.color-default {
+    stroke: #3b82f6; /* Blue (Primary Color) */
+}
+.color-warning {
+    stroke: #ef4444; /* Red (Warning Color) */
+}
+.color-complete {
+    stroke: #22c55e; /* Green (Completion Color) */
+}
+
+.font-color-default {
+    color: #334155;
+}
+
+.font-color-dark-background {
+    color: var(--mat-sys-on-primary);
+}
+
+/* Equivalent to: absolute flex flex-col items-center justify-center text-center */
+.center-content {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 8px;
+}
+
+/* Equivalent to: font-bold text-slate-700 */
+.time-main {
+    font-weight: 700;
+    // color: #334155; /* Dark Slate */
+}

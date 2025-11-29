@@ -1,0 +1,25 @@
+.join-trivia-game {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+    // margin-top: 10%;
+    padding: 16px;
+}
+
+.trivia-join-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+mat-card.mat-mdc-card-filled {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.header-with-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    /* Aligns button to top if title wraps */
+}

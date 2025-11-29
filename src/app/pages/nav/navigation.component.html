@@ -6,7 +6,10 @@
     <mat-nav-list>
       <a mat-list-item (click)="drawer.close()" routerLink="home">Home</a>
       <a mat-list-item (click)="drawer.close()" routerLink="interviews">Bishopric Interviews</a>
+      <a mat-list-item (click)="drawer.close()" routerLink="/christmas/trivia-game">Christmas Trivia</a>
       @if (authenticatedUser()?.isSiteAdmin) {
+      <a mat-list-item (click)="drawer.close()" routerLink="/christmas/trivia-board">Christmas Trivia Board</a>
+      <a mat-list-item (click)="drawer.close()" routerLink="/christmas/trivia-admin">Christmas Trivia Admin Panel</a>
       <a mat-list-item (click)="drawer.close()" routerLink="users">Users</a>
       }
     </mat-nav-list>
