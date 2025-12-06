@@ -31,7 +31,7 @@ mat-card.mat-mdc-card-filled {
     line-height: normal;
     display: grid;
     /* Define two columns of equal width */
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 45vw 45vw;
     /* Define two rows of content */
     grid-template-rows: 1fr 1fr;
     column-gap: 48px;
@@ -99,6 +99,7 @@ mat-card.mat-mdc-card-filled {
     font-size: xxx-large;
     line-height: normal;
     margin-bottom: 36px;
+    text-align: center;
 }
 
 @keyframes show-correct-answer {
