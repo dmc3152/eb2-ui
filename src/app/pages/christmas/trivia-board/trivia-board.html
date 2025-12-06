@@ -9,6 +9,10 @@
                 @if (currentState === 'SPLASH') {
                     <div class="message-wrapper">
                         <span class="message">Waiting for the game to start</span>
+                        <div class="qr-code">
+                            <span>Scan to join</span>
+                            <qrcode [qrdata]="'https://eb2ward.com/christmas/join-trivia-game'" [width]="400" [errorCorrectionLevel]="'M'"></qrcode>
+                        </div>
                     </div>
                 }
                 @else if (currentState === 'PAUSED') {
@@ -60,7 +64,7 @@
                     </div>
                 }
             </div>
-            @if (currentState !== 'SCORE') {
+            @if (currentState !== 'SCORE' && currentState !== 'SPLASH') {
             <div class="footer">
                 @let duration = time();
                 @if (duration) {

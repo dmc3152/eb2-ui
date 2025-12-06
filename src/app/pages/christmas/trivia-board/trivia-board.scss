@@ -164,6 +164,11 @@ mat-card-content {
     flex: 1;
     justify-content: center;
     align-items: center;
+    gap: 32px;
+
+    .qr-code {
+        font-size: larger;
+    }
 }
 
 .message {
