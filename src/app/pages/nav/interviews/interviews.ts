@@ -76,9 +76,9 @@ export class InterviewsPage {
     map(response => Array.from(response.data.allAppointmentTypes).sort(this.sortStringFactory("name"))),
     map(options => {
       const tithingDeclarationOptionIndex = options.findIndex(item => item.id === 'appointment_type:tithing_declaration');
-      if (tithingDeclarationOptionIndex > 0) {
+      if (tithingDeclarationOptionIndex > -1) {
         const [tithingDeclarationOption] = options.splice(tithingDeclarationOptionIndex, 1);
-        options.unshift(tithingDeclarationOption);
+        // options.unshift(tithingDeclarationOption);
       }
       return options;
     })
