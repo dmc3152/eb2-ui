@@ -1,5 +1,4 @@
-query Self {
-  self {
+fragment UserDetails on User {
     id
     firstName
     lastName
@@ -9,6 +8,11 @@ query Self {
       id
       name
     }
+}
+
+query Self {
+  self {
+    ...UserDetails
   }
 }
 

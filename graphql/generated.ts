@@ -80,8 +80,30 @@ export type AvailabilityBlockAvailableSlotArgs = {
 
 export type Calling = {
   __typename?: 'Calling';
+  assignedTo: Array<User>;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
+};
+
+export type CallingConnection = {
+  __typename?: 'CallingConnection';
+  edges: Array<CallingEdge>;
+  pageInfo: PageInfo;
+};
+
+export type CallingEdge = {
+  __typename?: 'CallingEdge';
+  node: Calling;
+};
+
+export type CallingFilters = {
+  isAssigned?: InputMaybe<Scalars['Boolean']['input']>;
+  nameContains?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CallingSearch = {
+  filters?: InputMaybe<CallingFilters>;
+  paging?: InputMaybe<OffsetPaging>;
 };
 
 export type Credentials = {
@@ -226,6 +248,7 @@ export type Query = {
   allAvailabilityBlocks: Array<AvailabilityBlock>;
   availabilityBlocks: Array<AvailabilityBlock>;
   availableTimeSlots: Array<Maybe<TimeSlot>>;
+  callings?: Maybe<CallingConnection>;
   currentGame?: Maybe<TriviaGame>;
   myTriviaScore: Array<TriviaPlayerScore>;
   self?: Maybe<User>;
@@ -241,6 +264,11 @@ export type QueryAvailabilityBlocksArgs = {
 export type QueryAvailableTimeSlotsArgs = {
   bishopricMember: Scalars['ID']['input'];
   durationInMinutes: Scalars['Int']['input'];
+};
+
+
+export type QueryCallingsArgs = {
+  input?: InputMaybe<CallingSearch>;
 };
 
 
@@ -529,6 +557,8 @@ export type VerifyEmailPayload = {
   success: Scalars['Boolean']['output'];
 };
 
+export type UserDetailsFragment = { __typename?: 'User', id: string, firstName: string, lastName: string, email: any, isSiteAdmin?: boolean | null, callings: Array<{ __typename?: 'Calling', id: string, name: string }> };
+
 export type SelfQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -698,6 +728,19 @@ export type UsersSearchQueryVariables = Exact<{
 
 export type UsersSearchQuery = { __typename?: 'Query', users?: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, firstName: string, lastName: string, callings: Array<{ __typename?: 'Calling', id: string, name: string }> } }>, pageInfo: { __typename?: 'PageInfo', pageSize: number, pageOffset: number, hasNextPage: boolean, totalCount: number } } | null };
 
+export const UserDetailsFragmentDoc = gql`
+    fragment UserDetails on User {
+  id
+  firstName
+  lastName
+  email
+  isSiteAdmin
+  callings {
+    id
+    name
+  }
+}
+    `;
 export const UserListItemFragmentDoc = gql`
     fragment UserListItem on User {
   id
@@ -712,18 +755,10 @@ export const UserListItemFragmentDoc = gql`
 export const SelfDocument = gql`
     query Self {
   self {
-    id
-    firstName
-    lastName
-    email
-    isSiteAdmin
-    callings {
-      id
-      name
-    }
+    ...UserDetails
   }
 }
-    `;
+    ${UserDetailsFragmentDoc}`;
 
   @Injectable({
     providedIn: 'root'

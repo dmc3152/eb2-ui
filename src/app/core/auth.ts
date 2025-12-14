@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { Credentials, LoginErrorCodes, LoginGQL, LogoutGQL, RequestPasswordResetErrorCodes, RequestPasswordResetGQL, RequestPasswordResetMutation, ResendEmailVerificationGQL, ResetPasswordDetails, ResetPasswordErrorCodes, ResetPasswordGQL, ResetPasswordMutationVariables, SelfGQL, SignUpDetails, SignUpErrorCodes, SignUpGQL, User, VerifyEmailErrorCodes, VerifyEmailGQL } from '../../../graphql/generated';
+import { Credentials, LoginErrorCodes, LoginGQL, LogoutGQL, RequestPasswordResetErrorCodes, RequestPasswordResetGQL, RequestPasswordResetMutation, ResendEmailVerificationGQL, ResetPasswordDetails, ResetPasswordErrorCodes, ResetPasswordGQL, ResetPasswordMutationVariables, SelfGQL, SignUpDetails, SignUpErrorCodes, SignUpGQL, User, UserDetailsFragment, VerifyEmailErrorCodes, VerifyEmailGQL } from '../../../graphql/generated';
 import { catchError, firstValueFrom, of } from 'rxjs';
 import { Utilities } from './utilities';
 import { MutationResult } from 'apollo-angular';
@@ -17,7 +17,7 @@ export class AuthService {
   private _verifyEmailGql = inject(VerifyEmailGQL);
   private _resendEmailVerificationGql = inject(ResendEmailVerificationGQL);
 
-  private _authenticatedUser = signal<User | null>(null);
+  private _authenticatedUser = signal<UserDetailsFragment | null>(null);
   private _isAuthenticated = signal<boolean>(false);
   
   isAuthenticated = this._isAuthenticated.asReadonly();
@@ -68,7 +68,7 @@ export class AuthService {
     return false;
   }
 
-  self = async (): Promise<User | null> => {
+  self = async (): Promise<UserDetailsFragment | null> => {
     const response = await firstValueFrom(this._selfGql.fetch());
     if (!response.data.self?.id) {
       return null;
