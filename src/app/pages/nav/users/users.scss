@@ -25,3 +25,9 @@ mat-card-content {
     min-height: 0;
     overflow-anchor: none;
 }
+
+.show-more-container {
+    display: flex;
+    justify-content: center;
+    padding: 8px;
+}

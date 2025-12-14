@@ -4,12 +4,13 @@ import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { OffsetPaging, UsersSearchGQL } from '@graphql';
 import { firstValueFrom, map, Observable, tap } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
+import { MatButton } from '@angular/material/button';
 
 type UnwrapObservable<T> = T extends Observable<infer U> ? U : T;
 
 @Component({
   selector: 'app-users',
-  imports: [InfiniteScrollDirective, MatListModule, MatCardModule],
+  imports: [InfiniteScrollDirective, MatListModule, MatCardModule, MatButton],
   templateUrl: './users.html',
   styleUrl: './users.scss'
 })
@@ -20,7 +21,7 @@ export class UsersPage implements OnInit {
     limit: Math.ceil(window.innerHeight / 64 + 5),
     offset: 0
   });
-  private hasMorePages = signal<Boolean>(true);
+  public hasMorePages = signal<Boolean>(true);
   private searchSubscription = (paging: OffsetPaging) => this.userSearch.fetch({ input: { paging } }).pipe(
     tap(result => this.hasMorePages.set(result.data.users?.pageInfo.hasNextPage ?? false)),
     map(result => result.data.users?.edges.map(x => ({ node: { ...x.node, callings: x.node.callings.map(y => y.name).join() } }))),
