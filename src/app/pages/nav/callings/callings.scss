@@ -1,0 +1,33 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+    height: 100%;
+}
+
+mat-card {
+    flex: 1;
+    height: 100%;
+    max-height: calc(100vh - 88px);
+}
+
+mat-card-content {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.list-wrapper {
+    height: 100%;
+    overflow-y: auto;
+    position: relative;
+    min-height: 0;
+    overflow-anchor: none;
+}
+
+.show-more-container {
+    display: flex;
+    justify-content: center;
+    padding: 8px;
+}

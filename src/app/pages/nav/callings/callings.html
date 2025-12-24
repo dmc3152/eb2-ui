@@ -1,0 +1,29 @@
+<mat-card appearance="filled">
+    <mat-card-header>
+        <mat-card-title>Callings</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="list-wrapper" infiniteScroll [scrollWindow]="false" [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" [immediateCheck]="true" (scrolled)="onScroll()">
+            <mat-list>
+                @for (calling of callingSearchSignal(); track calling.id) {
+                <mat-list-item>
+                    <span matListItemTitle>{{ calling.name }}</span>
+                    @if (calling.assignedTo) {
+                    <span matListItemLine>{{ calling.assignedTo }}</span>
+                    }
+                </mat-list-item>
+                }
+            </mat-list>
+            @if (hasMorePages()) {
+            <div class="show-more-container">
+                <button matButton (click)="onScroll()">Show More Results</button>
+            </div>
+            }
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<!-- <mat-card appearance="filled">
+    <mat-card-content>
+    </mat-card-content>
+</mat-card> -->

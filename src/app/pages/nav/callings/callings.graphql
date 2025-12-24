@@ -1,0 +1,25 @@
+fragment CallingListItem on Calling {
+  id
+  name
+  assignedTo {
+    id
+    firstName
+    lastName
+  }
+}
+
+query CallingsSearch($input: CallingSearch) {
+  callings(input: $input) {
+    edges {
+      node {
+        ...CallingListItem
+      }
+    }
+    pageInfo {
+      pageSize
+      pageOffset
+      hasNextPage
+      totalCount
+    }
+  }
+}

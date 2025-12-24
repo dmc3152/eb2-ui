@@ -137,6 +137,16 @@ export const routes: Routes = [
                         return !!authService.authenticatedUser()?.isSiteAdmin;
                     }
                 ]
+            },
+            {
+                path: 'callings',
+                loadComponent: () => import('./pages/nav/callings/callings').then(m => m.CallingsPage),
+                canActivate: [
+                    () => {
+                        const authService = inject(AuthService);
+                        return !!authService.authenticatedUser()?.isSiteAdmin;
+                    }
+                ]
             }
         ]
     },

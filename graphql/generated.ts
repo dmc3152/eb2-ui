@@ -700,6 +700,15 @@ export type MyTriviaScoreQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MyTriviaScoreQuery = { __typename?: 'Query', myTriviaScore: Array<{ __typename?: 'TriviaPlayerScore', category: string, score: number }> };
 
+export type CallingListItemFragment = { __typename?: 'Calling', id: string, name: string, assignedTo: Array<{ __typename?: 'User', id: string, firstName: string, lastName: string }> };
+
+export type CallingsSearchQueryVariables = Exact<{
+  input?: InputMaybe<CallingSearch>;
+}>;
+
+
+export type CallingsSearchQuery = { __typename?: 'Query', callings?: { __typename?: 'CallingConnection', edges: Array<{ __typename?: 'CallingEdge', node: { __typename?: 'Calling', id: string, name: string, assignedTo: Array<{ __typename?: 'User', id: string, firstName: string, lastName: string }> } }>, pageInfo: { __typename?: 'PageInfo', pageSize: number, pageOffset: number, hasNextPage: boolean, totalCount: number } } | null };
+
 export type AvailabilityBlocksQueryVariables = Exact<{
   durationInMinutes: Scalars['Int']['input'];
 }>;
@@ -738,6 +747,17 @@ export const UserDetailsFragmentDoc = gql`
   callings {
     id
     name
+  }
+}
+    `;
+export const CallingListItemFragmentDoc = gql`
+    fragment CallingListItem on Calling {
+  id
+  name
+  assignedTo {
+    id
+    firstName
+    lastName
   }
 }
     `;
@@ -1295,6 +1315,34 @@ export const MyTriviaScoreDocument = gql`
   })
   export class MyTriviaScoreGQL extends Apollo.Query<MyTriviaScoreQuery, MyTriviaScoreQueryVariables> {
     document = MyTriviaScoreDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CallingsSearchDocument = gql`
+    query CallingsSearch($input: CallingSearch) {
+  callings(input: $input) {
+    edges {
+      node {
+        ...CallingListItem
+      }
+    }
+    pageInfo {
+      pageSize
+      pageOffset
+      hasNextPage
+      totalCount
+    }
+  }
+}
+    ${CallingListItemFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CallingsSearchGQL extends Apollo.Query<CallingsSearchQuery, CallingsSearchQueryVariables> {
+    document = CallingsSearchDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
