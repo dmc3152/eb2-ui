@@ -6,12 +6,13 @@ import { firstValueFrom, map, Observable, tap } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
 import { MatButton } from '@angular/material/button';
 import { CallingsService } from './callingsService';
+import { RouterLink } from '@angular/router';
 
 type UnwrapObservable<T> = T extends Observable<infer U> ? U : T;
 
 @Component({
   selector: 'app-callings',
-  imports: [InfiniteScrollDirective, MatListModule, MatCardModule, MatButton],
+  imports: [InfiniteScrollDirective, MatListModule, MatCardModule, MatButton, RouterLink],
   templateUrl: './callings.html',
   styleUrl: './callings.scss'
 })

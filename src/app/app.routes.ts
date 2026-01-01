@@ -146,7 +146,11 @@ export const routes: Routes = [
                         const authService = inject(AuthService);
                         return !!authService.authenticatedUser()?.isSiteAdmin;
                     }
-                ]
+                ],
+            },
+            {
+                path: 'calling/:callingId',
+                loadComponent: () => import('./pages/nav/callings/calling/calling').then(m => m.CallingPage),
             }
         ]
     },

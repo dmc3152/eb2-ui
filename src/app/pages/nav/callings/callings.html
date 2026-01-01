@@ -6,24 +6,20 @@
         <div class="list-wrapper" infiniteScroll [scrollWindow]="false" [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" [immediateCheck]="true" (scrolled)="onScroll()">
             <mat-list>
                 @for (calling of callingSearchSignal(); track calling.id) {
-                <mat-list-item>
-                    <span matListItemTitle>{{ calling.name }}</span>
-                    @if (calling.assignedTo) {
-                    <span matListItemLine>{{ calling.assignedTo }}</span>
-                    }
-                </mat-list-item>
+                    <mat-list-item>
+                        <a matListItemLink [routerLink]="['../calling', calling.id]"></a>
+                        <span matListItemTitle>{{ calling.name }}</span>
+                        @if (calling.assignedTo) {
+                            <span matListItemLine>{{ calling.assignedTo }}</span>
+                        }
+                    </mat-list-item>
                 }
             </mat-list>
             @if (hasMorePages()) {
-            <div class="show-more-container">
-                <button matButton (click)="onScroll()">Show More Results</button>
-            </div>
+                <div class="show-more-container">
+                    <button matButton (click)="onScroll()">Show More Results</button>
+                </div>
             }
         </div>
     </mat-card-content>
 </mat-card>
-
-<!-- <mat-card appearance="filled">
-    <mat-card-content>
-    </mat-card-content>
-</mat-card> -->
