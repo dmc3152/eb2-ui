@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ForgotPasswordPage } from './forgot-password';
+import { ApolloTestingModule } from 'apollo-angular/testing';
+import { provideRouter } from '@angular/router';
 
 describe('ForgotPassword', () => {
   let component: ForgotPasswordPage;
@@ -8,7 +10,8 @@ describe('ForgotPassword', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ForgotPasswordPage]
+      imports: [ForgotPasswordPage, ApolloTestingModule],
+      providers: [provideRouter([])]
     })
     .compileComponents();
 

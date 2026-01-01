@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LoginPage } from './login';
+import { provideRouter } from '@angular/router';
+import { ApolloTestingModule } from 'apollo-angular/testing';
 
 describe('Login', () => {
   let component: LoginPage;
@@ -8,7 +10,8 @@ describe('Login', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LoginPage]
+      imports: [LoginPage, ApolloTestingModule],
+      providers: [provideRouter([])]
     })
     .compileComponents();
 

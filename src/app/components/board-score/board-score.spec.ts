@@ -13,6 +13,7 @@ describe('BoardScore', () => {
     .compileComponents();
 
     fixture = TestBed.createComponent(BoardScore);
+    fixture.componentRef.setInput('data', { category: '', scores: [] });
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

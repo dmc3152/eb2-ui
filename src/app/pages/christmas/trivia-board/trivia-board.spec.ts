@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TriviaBoard } from './trivia-board';
+import { ApolloTestingModule } from 'apollo-angular/testing';
 
 describe('TriviaBoard', () => {
   let component: TriviaBoard;
@@ -8,7 +9,7 @@ describe('TriviaBoard', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TriviaBoard]
+      imports: [TriviaBoard, ApolloTestingModule]
     })
     .compileComponents();
 

@@ -1,12 +1,29 @@
 import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
+import { provideRouter } from '@angular/router';
+import { SwUpdate } from '@angular/service-worker';
+import { of } from 'rxjs';
+import { vi } from 'vitest';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
-      providers: [provideZonelessChangeDetection()]
+      providers: [
+        provideZonelessChangeDetection(),
+        provideRouter([]),
+        {
+          provide: SwUpdate,
+          useValue: {
+            // Mock the properties/methods your app uses
+            isEnabled: false, 
+            versionUpdates: of(), 
+            checkForUpdate: vi.fn().mockResolvedValue(false),
+            activateUpdate: vi.fn().mockResolvedValue(false),
+          }
+        }
+      ]
     }).compileComponents();
   });
 
@@ -14,12 +31,5 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
-  });
-
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(App);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, app');
   });
 });

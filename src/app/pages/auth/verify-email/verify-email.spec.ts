@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VerifyEmailPage } from './verify-email';
+import { ApolloTestingModule } from 'apollo-angular/testing';
+import { provideRouter } from '@angular/router';
 
 describe('VerifyEmail', () => {
   let component: VerifyEmailPage;
@@ -8,7 +10,8 @@ describe('VerifyEmail', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [VerifyEmailPage]
+      imports: [VerifyEmailPage, ApolloTestingModule],
+      providers: [provideRouter([])]
     })
     .compileComponents();
 

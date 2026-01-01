@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CallingsPage } from './callings';
+import { ApolloTestingModule } from 'apollo-angular/testing';
 
 describe('Users', () => {
   let component: CallingsPage;
@@ -8,7 +9,7 @@ describe('Users', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CallingsPage]
+      imports: [CallingsPage, ApolloTestingModule]
     })
     .compileComponents();
 

@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { InterviewSuccessPage } from './interview-success';
+import { provideRouter } from '@angular/router';
 
 describe('InterviewSuccess', () => {
   let component: InterviewSuccessPage;
@@ -8,7 +9,8 @@ describe('InterviewSuccess', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [InterviewSuccessPage]
+      imports: [InterviewSuccessPage],
+      providers: [provideRouter([])]
     })
     .compileComponents();
 

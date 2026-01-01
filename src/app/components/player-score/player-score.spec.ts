@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PlayerScore } from './player-score';
+import { BaseChartDirective } from 'ng2-charts';
 
 describe('PlayerScore', () => {
   let component: PlayerScore;
@@ -8,11 +9,12 @@ describe('PlayerScore', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PlayerScore]
+      imports: [PlayerScore],
     })
     .compileComponents();
 
     fixture = TestBed.createComponent(PlayerScore);
+    fixture.componentRef.setInput('data', []);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

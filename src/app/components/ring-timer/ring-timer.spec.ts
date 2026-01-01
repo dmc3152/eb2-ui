@@ -13,6 +13,7 @@ describe('RingTimer', () => {
     .compileComponents();
 
     fixture = TestBed.createComponent(RingTimer);
+    fixture.componentRef.setInput('duration', 500);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

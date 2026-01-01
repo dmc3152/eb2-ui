@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { JoinTriviaGame } from './join-trivia-game';
+import { ApolloTestingModule } from 'apollo-angular/testing';
+import { provideRouter } from '@angular/router';
 
 describe('JoinTriviaGame', () => {
   let component: JoinTriviaGame;
@@ -8,7 +10,8 @@ describe('JoinTriviaGame', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [JoinTriviaGame]
+      imports: [JoinTriviaGame, ApolloTestingModule],
+      providers: [provideRouter([])]
     })
     .compileComponents();
 
