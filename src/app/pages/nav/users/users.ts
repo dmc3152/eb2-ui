@@ -22,9 +22,9 @@ export class UsersPage implements OnInit {
     offset: 0
   });
   public hasMorePages = signal<Boolean>(true);
-  private searchSubscription = (paging: OffsetPaging) => this.userSearch.fetch({ input: { paging } }).pipe(
-    tap(result => this.hasMorePages.set(result.data.users?.pageInfo.hasNextPage ?? false)),
-    map(result => result.data.users?.edges.map(x => ({ node: { ...x.node, callings: x.node.callings.map(y => y.name).join() } }))),
+  private searchSubscription = (paging: OffsetPaging) => this.userSearch.fetch({ variables: { input: { paging } } }).pipe(
+    tap(result => this.hasMorePages.set(result.data?.users?.pageInfo.hasNextPage ?? false)),
+    map(result => result.data?.users?.edges.map(x => ({ node: { ...x.node, callings: x.node.callings.map(y => y.name).join() } }))),
   );
   userSearchSignal = signal<UnwrapObservable<ReturnType<typeof this.searchSubscription>>>([]);
 

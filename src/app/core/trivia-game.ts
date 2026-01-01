@@ -27,7 +27,7 @@ export class TriviaGameService {
   authenticatedUser = this._authenticatedUser.asReadonly();
 
   getCurrentGame = async () => {
-    return firstValueFrom(this.currentGameGql.fetch(undefined, { fetchPolicy: 'network-only' }).pipe(map(x => x.data.currentGame?.id)));
+    return firstValueFrom(this.currentGameGql.fetch({ fetchPolicy: 'network-only' }).pipe(map(x => x.data?.currentGame?.id)));
   }
 
   joinGameAsPlayer = () => {
@@ -56,7 +56,7 @@ export class TriviaGameService {
 
   changePlayerName = async (newName: string) => {
     try {
-      await firstValueFrom(this.changeMyTriviaPlayerNameGql.mutate({ newName }));
+      await firstValueFrom(this.changeMyTriviaPlayerNameGql.mutate({ variables: { newName } }));
       this._authenticatedUser.set({ name: newName });
     }
     catch (err) {
@@ -65,15 +65,15 @@ export class TriviaGameService {
   }
 
   myScore = () => {
-    return this.myTriviaScoreGql.fetch(undefined, { fetchPolicy: 'network-only' }).pipe(
-      map(x => x.data.myTriviaScore),
+    return this.myTriviaScoreGql.fetch({ fetchPolicy: 'network-only' }).pipe(
+      map(x => x.data?.myTriviaScore),
       map(this.generalIssue),
       catchError(this.generalError)
     );
   }
 
   submitAnswer = (answer: TriviaAnswer) => {
-    return this.submitTriviaAnswerGql.mutate({ answer })
+    return this.submitTriviaAnswerGql.mutate({ variables: { answer } })
       .pipe(
         map(x => x.data?.submitTriviaAnswer),
         map(this.generalIssue),
@@ -82,7 +82,7 @@ export class TriviaGameService {
   }
 
   createGame = (gameId: string) => {
-    return this.createTriviaGameGql.mutate({ gameId })
+    return this.createTriviaGameGql.mutate({ variables: { gameId } })
       .pipe(
         map(x => x.data?.createTriviaGame),
         map(this.generalIssue),
@@ -91,7 +91,7 @@ export class TriviaGameService {
   }
 
   startGame = (gameId: string) => {
-    return this.startTriviaGameGql.mutate({ gameId })
+    return this.startTriviaGameGql.mutate({ variables: { gameId } })
       .pipe(
         map(x => x.data?.startTriviaGame),
         map(this.generalIssue),

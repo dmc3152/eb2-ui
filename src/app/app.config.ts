@@ -5,7 +5,7 @@ import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
 import { provideApollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
-import { ApolloClient, ApolloClientOptions, ApolloLink, InMemoryCache, NormalizedCacheObject, Observable, Operation, split } from '@apollo/client/core';
+import { ApolloClient, ApolloLink, InMemoryCache, Observable } from '@apollo/client/core';
 import { createClient, ClientOptions, Client, ExecutionResult } from 'graphql-sse';
 import { Kind, OperationTypeNode, print } from 'graphql';
 import { environment } from '../environments/environment';
@@ -17,7 +17,7 @@ import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 declare global {
   interface Window {
-    __APOLLO_CLIENT__: ApolloClient<any>;
+    __APOLLO_CLIENT__: ApolloClient;
   }
 }
 
@@ -29,7 +29,7 @@ class SSELink extends ApolloLink {
     this.client = createClient(options);
   }
 
-  public override request(operation: Operation): Observable<ExecutionResult> {
+  public override request(operation: ApolloLink.Operation): Observable<ExecutionResult> {
     return new Observable((sink) => {
       return this.client.subscribe<ExecutionResult>(
         { ...operation, query: print(operation.query) },
@@ -60,7 +60,7 @@ export const appConfig: ApplicationConfig = {
         credentials: 'include',
       });
 
-      const link = split(
+      const link = ApolloLink.split(
         // Split based on operation type
         ({ query }) => {
           const definition = getMainDefinition(query);
@@ -73,7 +73,7 @@ export const appConfig: ApplicationConfig = {
         http,
       );
 
-      const client: ApolloClientOptions<NormalizedCacheObject> = {
+      const client: ApolloClient.Options = {
         link,
         cache: new InMemoryCache(),
         // other options...

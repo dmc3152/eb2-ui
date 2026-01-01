@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { CallingsSearchGQL, CallingsSearchQueryVariables } from '@graphql';
+import { onlyCompleteData } from 'apollo-angular';
 import { map } from 'rxjs';
 
 @Injectable({
@@ -10,8 +11,11 @@ export class CallingsService {
 
   searchCallings(variables: CallingsSearchQueryVariables) {
     return this.callingsSearchGql
-      .watch({ ...variables })
+      .watch({ variables, notifyOnNetworkStatusChange: false })
       .valueChanges
-      .pipe(map(result => result.data.callings));
+      .pipe(
+        onlyCompleteData(),
+        map(result => result.data.callings)
+      );
   }
 }

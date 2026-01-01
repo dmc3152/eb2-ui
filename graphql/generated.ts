@@ -83,6 +83,7 @@ export type Calling = {
   assignedTo: Array<User>;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
+  permissions: Array<Permission>;
 };
 
 export type CallingConnection = {
@@ -141,14 +142,18 @@ export type LogoutPayload = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addCallingsToPermission: PermissionAssociateCallingsPayload;
   changeMyTriviaPlayerName: TriviaGamePayload;
   closeTriviaGame: TriviaGamePayload;
   createAppointment: AppointmentPayload;
+  createPermission: PermissionPayload;
   createTriviaGame: TriviaGamePayload;
+  deletePermission: PermissionDeletePayload;
   login: LoginPayload;
   logout: LogoutPayload;
   nextTriviaQuestion: TriviaGamePayload;
   pauseTriviaGame: TriviaGamePayload;
+  removeCallingsFromPermission: PermissionRemoveCallingsPayload;
   requestPasswordReset: RequestPasswordResetPayload;
   resendEmailVerification: ResendEmailVerificationPayload;
   resetPassword: ResetPasswordPayload;
@@ -163,6 +168,11 @@ export type Mutation = {
 };
 
 
+export type MutationAddCallingsToPermissionArgs = {
+  input: PermissionCallings;
+};
+
+
 export type MutationChangeMyTriviaPlayerNameArgs = {
   newName: Scalars['String']['input'];
 };
@@ -173,13 +183,28 @@ export type MutationCreateAppointmentArgs = {
 };
 
 
+export type MutationCreatePermissionArgs = {
+  input: PermissionCreate;
+};
+
+
 export type MutationCreateTriviaGameArgs = {
   gameId: Scalars['ID']['input'];
 };
 
 
+export type MutationDeletePermissionArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationLoginArgs = {
   input: Credentials;
+};
+
+
+export type MutationRemoveCallingsFromPermissionArgs = {
+  input: PermissionCallings;
 };
 
 
@@ -231,6 +256,106 @@ export type PageInfo = {
   totalCount: Scalars['Int']['output'];
 };
 
+export type Permission = {
+  __typename?: 'Permission';
+  callings: Array<Calling>;
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+};
+
+export type PermissionAssociateCallingsError = {
+  __typename?: 'PermissionAssociateCallingsError';
+  code: PermissionAssociateCallingsErrorCode;
+  message: Scalars['String']['output'];
+};
+
+export enum PermissionAssociateCallingsErrorCode {
+  CallingNotFound = 'CALLING_NOT_FOUND',
+  PermissionNotFound = 'PERMISSION_NOT_FOUND',
+  UnexpectedError = 'UNEXPECTED_ERROR'
+}
+
+export type PermissionAssociateCallingsPayload = {
+  __typename?: 'PermissionAssociateCallingsPayload';
+  callings: Array<Calling>;
+  error?: Maybe<PermissionAssociateCallingsError>;
+  success: Scalars['Boolean']['output'];
+};
+
+export type PermissionCallings = {
+  callingIds: Array<Scalars['ID']['input']>;
+  permissionId: Scalars['ID']['input'];
+};
+
+export type PermissionConnection = {
+  __typename?: 'PermissionConnection';
+  edges: Array<PermissionEdge>;
+  pageInfo: PageInfo;
+};
+
+export type PermissionCreate = {
+  callings?: InputMaybe<Array<Scalars['ID']['input']>>;
+  name: Scalars['String']['input'];
+};
+
+export type PermissionDeleteError = {
+  __typename?: 'PermissionDeleteError';
+  code: PermissionDeleteErrorCode;
+  message: Scalars['String']['output'];
+};
+
+export enum PermissionDeleteErrorCode {
+  PermissionNotFound = 'PERMISSION_NOT_FOUND',
+  UnexpectedError = 'UNEXPECTED_ERROR'
+}
+
+export type PermissionDeletePayload = {
+  __typename?: 'PermissionDeletePayload';
+  error?: Maybe<PermissionDeleteError>;
+  success: Scalars['Boolean']['output'];
+};
+
+export type PermissionEdge = {
+  __typename?: 'PermissionEdge';
+  node: Permission;
+};
+
+export type PermissionError = {
+  __typename?: 'PermissionError';
+  code: PermissionErrorCode;
+  message: Scalars['String']['output'];
+};
+
+export enum PermissionErrorCode {
+  InvalidPermissionName = 'INVALID_PERMISSION_NAME',
+  PermissionAlreadyExists = 'PERMISSION_ALREADY_EXISTS',
+  UnexpectedError = 'UNEXPECTED_ERROR'
+}
+
+export type PermissionFilters = {
+  callingIsNotOneOf?: InputMaybe<Array<Scalars['ID']['input']>>;
+  callingIsOneOf?: InputMaybe<Array<Scalars['ID']['input']>>;
+  nameContains?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PermissionPayload = {
+  __typename?: 'PermissionPayload';
+  error?: Maybe<PermissionError>;
+  permission?: Maybe<Permission>;
+  success: Scalars['Boolean']['output'];
+};
+
+export type PermissionRemoveCallingsPayload = {
+  __typename?: 'PermissionRemoveCallingsPayload';
+  error?: Maybe<PermissionAssociateCallingsError>;
+  success: Scalars['Boolean']['output'];
+};
+
+export type PermissionSearch = {
+  filters?: InputMaybe<PermissionFilters>;
+  paging?: InputMaybe<OffsetPaging>;
+};
+
 export type PlayerScore = {
   __typename?: 'PlayerScore';
   playerName: Scalars['String']['output'];
@@ -251,6 +376,7 @@ export type Query = {
   callings?: Maybe<CallingConnection>;
   currentGame?: Maybe<TriviaGame>;
   myTriviaScore: Array<TriviaPlayerScore>;
+  permissions?: Maybe<PermissionConnection>;
   self?: Maybe<User>;
   users?: Maybe<UserConnection>;
 };
@@ -269,6 +395,11 @@ export type QueryAvailableTimeSlotsArgs = {
 
 export type QueryCallingsArgs = {
   input?: InputMaybe<CallingSearch>;
+};
+
+
+export type QueryPermissionsArgs = {
+  input?: InputMaybe<PermissionSearch>;
 };
 
 

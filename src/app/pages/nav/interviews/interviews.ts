@@ -14,6 +14,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
+import { onlyCompleteData } from 'apollo-angular';
 
 export interface AvailabilityBlockDisplay {
   start: string;
@@ -73,7 +74,7 @@ export class InterviewsPage {
   });
   isSubmitting = signal(false);
   interviewOptions = toSignal(this.allAppointmentTypesGQL.fetch().pipe(
-    map(response => Array.from(response.data.allAppointmentTypes).sort(this.sortStringFactory("name"))),
+    map(response => Array.from(response.data?.allAppointmentTypes || []).sort(this.sortStringFactory("name"))),
     map(options => {
       const tithingDeclarationOptionIndex = options.findIndex(item => item.id === 'appointment_type:tithing_declaration');
       if (tithingDeclarationOptionIndex > -1) {
@@ -86,7 +87,16 @@ export class InterviewsPage {
   selectedAppointmentType = computed(() => this.findInterviewOption(this.interviewType()));
   availabilityResource = rxResource({
     params: () => ({ duration: this.selectedAppointmentType()?.durationInMinutes }),
-    stream: ({ params }) => !params.duration ? of(undefined) : this.availabilityBlocksGQL.watch({ durationInMinutes: params.duration }, { fetchPolicy: 'cache-and-network' }).valueChanges,
+    stream: ({ params }) =>
+      !params.duration ?
+        of(undefined) :
+        this.availabilityBlocksGQL.watch({
+          variables: { durationInMinutes: params.duration },
+          fetchPolicy: 'cache-and-network',
+          notifyOnNetworkStatusChange: false
+        })
+          .valueChanges
+          .pipe(onlyCompleteData()),
   });
 
   private bishopricMemberMap = {
@@ -99,7 +109,7 @@ export class InterviewsPage {
     const availabilityMap = new Map<string, AvailabilityBlockDisplay>();
     if (!this.availabilityResource.hasValue() || !this.selectedAppointmentType()) return availabilityMap;
 
-    const availabilities = this.availabilityResource.value().data.allAvailabilityBlocks.reduce((acc, block) => {
+    const availabilities = (this.availabilityResource.value().data?.allAvailabilityBlocks || []).reduce((acc, block) => {
       if (!block.bishopricMember || !block.availableSlot?.start || !block.availableSlot.end) return acc;
 
       const isValidBishopricMember = this.selectedAppointmentType()!.interviewers.includes(block.bishopricMember);
@@ -184,7 +194,7 @@ export class InterviewsPage {
       }
     };
 
-    this.createAppointmentGQL.mutate({ input }).subscribe({
+    this.createAppointmentGQL.mutate({ variables: { input } }).subscribe({
       next: (result) => {
         if (result.data?.createAppointment.success) {
           this._snackBar.open('Appointment created successfully!', 'Close', { duration: 5000 });

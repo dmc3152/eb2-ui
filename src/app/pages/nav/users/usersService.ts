@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { UsersSearchGQL } from '@graphql';
+import { onlyCompleteData } from 'apollo-angular';
 import { map } from 'rxjs';
 
 @Injectable({
@@ -10,8 +11,13 @@ export class UsersService {
 
   async searchUsers() {
     return this.userSearchGql
-      .watch()
+      .watch({
+        notifyOnNetworkStatusChange: false
+      })
       .valueChanges
-      .pipe(map(result => result.data.users));
+      .pipe(
+        onlyCompleteData(),
+        map(result => result.data.users)
+      );
   }
 }

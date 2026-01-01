@@ -2,7 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { Credentials, LoginErrorCodes, LoginGQL, LogoutGQL, RequestPasswordResetErrorCodes, RequestPasswordResetGQL, RequestPasswordResetMutation, ResendEmailVerificationGQL, ResetPasswordDetails, ResetPasswordErrorCodes, ResetPasswordGQL, ResetPasswordMutationVariables, SelfGQL, SignUpDetails, SignUpErrorCodes, SignUpGQL, User, UserDetailsFragment, VerifyEmailErrorCodes, VerifyEmailGQL } from '../../../graphql/generated';
 import { catchError, firstValueFrom, of } from 'rxjs';
 import { Utilities } from './utilities';
-import { MutationResult } from 'apollo-angular';
+import { Apollo } from 'apollo-angular';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +24,7 @@ export class AuthService {
   authenticatedUser = this._authenticatedUser.asReadonly();
 
   login = async (input: Credentials): Promise<boolean> => {
-    const result = await firstValueFrom(this._loginGql.mutate({ input }).pipe(
+    const result = await firstValueFrom(this._loginGql.mutate({ variables: { input } }).pipe(
       catchError(error => of({
         data: {
           login: {
@@ -70,7 +70,7 @@ export class AuthService {
 
   self = async (): Promise<UserDetailsFragment | null> => {
     const response = await firstValueFrom(this._selfGql.fetch());
-    if (!response.data.self?.id) {
+    if (!response.data?.self?.id) {
       return null;
     }
 
@@ -81,7 +81,7 @@ export class AuthService {
   }
 
   signUp = async (input: SignUpDetails): Promise<{ success: boolean, code: SignUpErrorCodes | null }> => {
-    const response = await firstValueFrom(this._signUpGql.mutate({ input }));
+    const response = await firstValueFrom(this._signUpGql.mutate({ variables: { input } }));
 
     if (response.data?.signUp.error?.code) {
       console.error(response.data.signUp.error.message);
@@ -94,7 +94,7 @@ export class AuthService {
   }
 
   requestPasswordReset = async (email: String): Promise<boolean> => {
-    const response = await firstValueFrom(this._requestPasswordResetGql.mutate({ email }).pipe(
+    const response = await firstValueFrom(this._requestPasswordResetGql.mutate({ variables: { email } }).pipe(
       catchError(error => of({
         data: {
           requestPasswordReset: {
@@ -105,7 +105,7 @@ export class AuthService {
             }
           }
         }
-      } as MutationResult<RequestPasswordResetMutation>))
+      } as Apollo.MutateResult<RequestPasswordResetMutation>))
     ));
 
     if (response.data?.requestPasswordReset.success) return true;
@@ -119,7 +119,7 @@ export class AuthService {
   }
 
   resetPassword = async (input: ResetPasswordDetails): Promise<{ success: boolean, code: ResetPasswordErrorCodes | null }> => {
-    const response = await firstValueFrom(this._resetPasswordGql.mutate({ input }));
+    const response = await firstValueFrom(this._resetPasswordGql.mutate({ variables: { input } }));
 
     if (response.data?.resetPassword.error?.code) {
       console.error(response.data.resetPassword.error.message);
@@ -132,8 +132,7 @@ export class AuthService {
   }
 
   verifyEmail = async (email: string, code: number): Promise<{ success: boolean, code: VerifyEmailErrorCodes | null }> => {
-    const response = await firstValueFrom(this._verifyEmailGql.mutate({ email, code }));
-
+    const response = await firstValueFrom(this._verifyEmailGql.mutate({ variables: { email, code } }));
     if (response.data?.verifyEmail.error?.code) {
       console.error(response.data.verifyEmail.error.message);
     }
@@ -145,7 +144,7 @@ export class AuthService {
   }
 
   resendEmailVerification = async (email: string) => {
-    const response = await firstValueFrom(this._resendEmailVerificationGql.mutate({ email }));
+    const response = await firstValueFrom(this._resendEmailVerificationGql.mutate({ variables: { email } }));
     if (response.data?.resendEmailVerification.success) return true;
 
     if (response.data?.resendEmailVerification.error?.code) {
