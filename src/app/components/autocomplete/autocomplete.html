@@ -1,0 +1,42 @@
+<mat-form-field class="eb2-autocomplete" appearance="fill">
+  <input
+    type="text"
+    matInput
+    [formControl]="control"
+    [placeholder]="placeholder() || 'Type to search or add'"
+    [matAutocomplete]="auto"
+    (keydown)="onKeydown($event)"
+    aria-autocomplete="list"
+    aria-haspopup="listbox"
+  />
+
+  <ng-content select="mat-hint"></ng-content>
+  <ng-content select="mat-error"></ng-content>
+
+  @if (!hasProjectedError() && control.invalid) {
+    <mat-error>{{ errorMessage() }}</mat-error>
+  }
+
+  @if (canAdd()) {
+    <button
+      mat-icon-button
+      matSuffix
+      (click)="tryAdd()"
+      aria-label="Add option"
+      title="Add option"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+  }
+</mat-form-field>
+
+<mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectOption($event)" [displayWith]="displayOption">
+  @for (option of filteredOptions(); track option.value) {
+    <mat-option [value]="option">{{ option.text }}</mat-option>
+  }
+  @if (canAdd()) {
+    <mat-option class="add-option" (onSelectionChange)="tryAdd()">
+      Add "{{ control.value }}"
+    </mat-option>
+  }
+</mat-autocomplete>

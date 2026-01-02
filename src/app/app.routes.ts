@@ -140,6 +140,7 @@ export const routes: Routes = [
             },
             {
                 path: 'callings',
+                pathMatch: 'full',
                 loadComponent: () => import('./pages/nav/callings/callings').then(m => m.CallingsPage),
                 canActivate: [
                     () => {
@@ -149,8 +150,14 @@ export const routes: Routes = [
                 ],
             },
             {
-                path: 'calling/:callingId',
+                path: 'callings/:callingId',
                 loadComponent: () => import('./pages/nav/callings/calling/calling').then(m => m.CallingPage),
+                canActivate: [
+                    () => {
+                        const authService = inject(AuthService);
+                        return !!authService.authenticatedUser()?.isSiteAdmin;
+                    }
+                ],
             }
         ]
     },

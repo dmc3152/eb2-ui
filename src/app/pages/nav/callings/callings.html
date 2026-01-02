@@ -4,17 +4,16 @@
     </mat-card-header>
     <mat-card-content>
         <div class="list-wrapper" infiniteScroll [scrollWindow]="false" [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" [immediateCheck]="true" (scrolled)="onScroll()">
-            <mat-list>
+            <mat-nav-list>
                 @for (calling of callingSearchSignal(); track calling.id) {
-                    <mat-list-item>
-                        <a matListItemLink [routerLink]="['../calling', calling.id]"></a>
+                    <a mat-list-item [routerLink]="[calling.id]">
                         <span matListItemTitle>{{ calling.name }}</span>
                         @if (calling.assignedTo) {
                             <span matListItemLine>{{ calling.assignedTo }}</span>
                         }
-                    </mat-list-item>
+                    </a>
                 }
-            </mat-list>
+            </mat-nav-list>
             @if (hasMorePages()) {
                 <div class="show-more-container">
                     <button matButton (click)="onScroll()">Show More Results</button>

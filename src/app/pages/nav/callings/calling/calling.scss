@@ -1,0 +1,43 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+    height: 100%;
+}
+
+mat-card {
+    flex: 1;
+    height: 100%;
+    max-height: calc(100vh - 88px);
+}
+
+mat-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    margin-bottom: 16px;
+}
+
+mat-card-content {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.mat-expansion-panel-header-description {
+    justify-content: end;
+    align-items: center;
+}
+
+.expansion-row-actions {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: 8px;
+}
+
+mat-expansion-panel {
+    background-color: rgba(255, 255, 255, 0.6);
+}
