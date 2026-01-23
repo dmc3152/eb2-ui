@@ -23,3 +23,17 @@ query CallingsSearch($input: CallingSearch) {
     }
   }
 }
+
+fragment Calling on Calling {
+  ...CallingListItem
+  permissions {
+    id
+    name
+  }
+}
+
+query CallingById($callingId: ID!) {
+  callingById(id: $callingId) {
+    ...Calling
+  }
+}

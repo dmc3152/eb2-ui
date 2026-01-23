@@ -30,13 +30,27 @@
   }
 </mat-form-field>
 
-<mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectOption($event)" [displayWith]="displayOption">
+<mat-autocomplete #auto="matAutocomplete" (opened)="onPanelOpened()" (closed)="onPanelClosed()" (optionSelected)="selectOption($event)" [displayWith]="displayOption">
   @for (option of filteredOptions(); track option.value) {
     <mat-option [value]="option">{{ option.text }}</mat-option>
   }
+
+  @if (remoteHasMore() && remoteMode() === 'load-more') {
+    <mat-option class="load-more" (onSelectionChange)="loadMore()" [disabled]="isRemoteLoading()">
+      <ng-container *ngIf="!isRemoteLoading()">Load more…</ng-container>
+      <ng-container *ngIf="isRemoteLoading()">Loading…</ng-container>
+    </mat-option>
+  }
+
   @if (canAdd()) {
     <mat-option class="add-option" (onSelectionChange)="tryAdd()">
       Add "{{ control.value }}"
+    </mat-option>
+  }
+
+  @if (remoteMode() === 'infinite' && isRemoteLoading()) {
+    <mat-option class="loading-indicator" disabled>
+      Loading more…
     </mat-option>
   }
 </mat-autocomplete>

@@ -1,6 +1,14 @@
 <mat-card appearance="filled">
     <mat-card-header>
-        <mat-card-title>Callings</mat-card-title>
+        <a matIconButton aria-label="Back button" routerLink="../">
+            <mat-icon>arrow_back</mat-icon>
+        </a>
+        <mat-card-title-group>
+            <mat-card-title>Callings</mat-card-title>
+        </mat-card-title-group>
+        <a matIconButton aria-label="Add button">
+            <mat-icon>add</mat-icon>
+        </a>
     </mat-card-header>
     <mat-card-content>
         <div class="list-wrapper" infiniteScroll [scrollWindow]="false" [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" [immediateCheck]="true" (scrolled)="onScroll()">
@@ -11,6 +19,9 @@
                         @if (calling.assignedTo) {
                             <span matListItemLine>{{ calling.assignedTo }}</span>
                         }
+                        <button matIconButton matListItemMeta (click)="deleteCalling($event, calling.id)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
                     </a>
                 }
             </mat-nav-list>

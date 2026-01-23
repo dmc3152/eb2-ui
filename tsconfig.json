@@ -18,7 +18,7 @@
     "baseUrl": "./src",
     "paths": {
       "@core/*": ["app/core/*"],
-      "@pages": ["app/pages/*"],
+      "@pages/*": ["app/pages/*"],
       "@graphql": ["../graphql/generated.ts"],
     }
   },

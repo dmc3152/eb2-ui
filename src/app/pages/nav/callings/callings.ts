@@ -4,15 +4,16 @@ import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { OffsetPaging } from '@graphql';
 import { firstValueFrom, map, Observable, tap } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { CallingsService } from './callingsService';
 import { RouterLink } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
 
 type UnwrapObservable<T> = T extends Observable<infer U> ? U : T;
 
 @Component({
   selector: 'app-callings',
-  imports: [InfiniteScrollDirective, MatListModule, MatCardModule, MatButton, RouterLink],
+  imports: [InfiniteScrollDirective, MatListModule, MatCardModule, MatButton, RouterLink, MatIconButton, MatIcon],
   templateUrl: './callings.html',
   styleUrl: './callings.scss'
 })
@@ -52,5 +53,11 @@ export class CallingsPage implements OnInit {
       const nextValue = nextPage || [];
       return [...previousValue, ...nextValue];
     });
+  }
+
+  deleteCalling(event: Event, callingId: string) {
+    event.stopPropagation();
+    event.preventDefault();
+    console.log(`Delete calling with ID: ${callingId}`);
   }
 }

@@ -1,11 +1,11 @@
 fragment UserListItem on User {
+  id
+  firstName
+  lastName
+  callings {
     id
-    firstName
-    lastName
-    callings {
-        id
-        name
-    }
+    name
+  }
 }
 
 query UsersSearch($input: UserSearch) {
@@ -20,6 +20,48 @@ query UsersSearch($input: UserSearch) {
       pageOffset
       hasNextPage
       totalCount
+    }
+  }
+}
+
+fragment UserOption on User {
+  id
+  firstName
+  lastName
+}
+
+query UsersNotAssignedToCalling($input: UserSearch) {
+  users(input: $input) {
+    pageInfo {
+      pageSize
+      pageOffset
+      hasNextPage
+      totalCount
+    }
+    edges {
+      node {
+        ...UserOption
+      }
+    }
+  }
+}
+
+mutation AssignCallingsToUser($callingIds: [ID!]!, $userId: ID!) {
+  assignCallingsToUser(callingIds: $callingIds, userId: $userId) {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+
+mutation RemoveCallingsFromUser($callingIds: [ID!]!, $userId: ID!) {
+  removeCallingsFromUser(callingIds: $callingIds, userId: $userId) {
+    success
+    error {
+      code
+      message
     }
   }
 }

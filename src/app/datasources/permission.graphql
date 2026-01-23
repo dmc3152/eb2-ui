@@ -1,0 +1,36 @@
+query PermissionsNotAssignedToCalling($input: PermissionSearch) {
+  permissions(input: $input) {
+    pageInfo {
+      pageSize
+      pageOffset
+      hasNextPage
+      totalCount
+    }
+    edges {
+      node {
+        id
+        name
+      }
+    }
+  }
+}
+
+mutation AddCallingsToPermission($input: PermissionCallings!) {
+  addCallingsToPermission(input: $input) {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+
+mutation RemoveCallingsFromPermission($input: PermissionCallings!) {
+  removeCallingsFromPermission(input: $input) {
+    success
+    error {
+      code
+      message
+    }
+  }
+}

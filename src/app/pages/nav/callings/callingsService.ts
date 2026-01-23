@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { CallingsSearchGQL, CallingsSearchQueryVariables } from '@graphql';
+import { CallingByIdGQL, CallingsSearchGQL, CallingsSearchQueryVariables } from '@graphql';
 import { onlyCompleteData } from 'apollo-angular';
 import { map } from 'rxjs';
 
@@ -8,6 +8,7 @@ import { map } from 'rxjs';
 })
 export class CallingsService {
   private readonly callingsSearchGql = inject(CallingsSearchGQL);
+  private readonly callingByIdGql = inject(CallingByIdGQL);
 
   searchCallings(variables: CallingsSearchQueryVariables) {
     return this.callingsSearchGql
@@ -16,6 +17,16 @@ export class CallingsService {
       .pipe(
         onlyCompleteData(),
         map(result => result.data.callings)
+      );
+  }
+
+  callingById(id: string) {
+    return this.callingByIdGql
+      .watch({ variables: { callingId: id }, notifyOnNetworkStatusChange: false })
+      .valueChanges
+      .pipe(
+        onlyCompleteData(),
+        map(result => result.data.callingById || null)
       );
   }
 }

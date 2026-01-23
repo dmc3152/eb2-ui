@@ -12,6 +12,14 @@ mat-card {
     max-height: calc(100vh - 88px);
 }
 
+mat-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    margin-bottom: 16px;
+}
+
 mat-card-content {
     display: flex;
     flex-direction: column;
@@ -30,4 +38,12 @@ mat-card-content {
     display: flex;
     justify-content: center;
     padding: 8px;
+}
+
+.mdc-list-item--with-trailing-meta.mdc-list-item--with-two-lines .mdc-list-item__end {
+    align-self: center;
+}
+
+.mdc-list-item--with-trailing-meta.mdc-list-item--with-two-lines .mdc-list-item__end::before {
+    display: inline;
 }

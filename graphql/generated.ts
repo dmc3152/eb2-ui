@@ -92,6 +92,20 @@ export type CallingConnection = {
   pageInfo: PageInfo;
 };
 
+export type CallingCreateError = GenericError & {
+  __typename?: 'CallingCreateError';
+  code: CallingCreateErrorCodes;
+  message: Scalars['String']['output'];
+};
+
+export enum CallingCreateErrorCodes {
+  InsufficientPermissions = 'INSUFFICIENT_PERMISSIONS',
+  NameAlreadyExists = 'NAME_ALREADY_EXISTS',
+  PermissionAssignmentFailed = 'PERMISSION_ASSIGNMENT_FAILED',
+  UnknownError = 'UNKNOWN_ERROR',
+  UserAssignmentFailed = 'USER_ASSIGNMENT_FAILED'
+}
+
 export type CallingEdge = {
   __typename?: 'CallingEdge';
   node: Calling;
@@ -102,9 +116,60 @@ export type CallingFilters = {
   nameContains?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type CallingPayload = {
+  __typename?: 'CallingPayload';
+  calling?: Maybe<Calling>;
+  error?: Maybe<CallingUpdateError>;
+  success: Scalars['Boolean']['output'];
+};
+
 export type CallingSearch = {
   filters?: InputMaybe<CallingFilters>;
   paging?: InputMaybe<OffsetPaging>;
+};
+
+export type CallingUpdateError = GenericError & {
+  __typename?: 'CallingUpdateError';
+  code: CallingUpdateErrorCodes;
+  message: Scalars['String']['output'];
+};
+
+export enum CallingUpdateErrorCodes {
+  InsufficientPermissions = 'INSUFFICIENT_PERMISSIONS',
+  NameAlreadyExists = 'NAME_ALREADY_EXISTS',
+  UnknownError = 'UNKNOWN_ERROR'
+}
+
+export type CallingsAssignmentError = GenericError & {
+  __typename?: 'CallingsAssignmentError';
+  code: CallingsAssignmentErrorCodes;
+  message: Scalars['String']['output'];
+};
+
+export enum CallingsAssignmentErrorCodes {
+  CallingNotFound = 'CALLING_NOT_FOUND',
+  InsufficientPermissions = 'INSUFFICIENT_PERMISSIONS',
+  UnknownError = 'UNKNOWN_ERROR',
+  UserNotFound = 'USER_NOT_FOUND'
+}
+
+export type CallingsAssignmentPayload = {
+  __typename?: 'CallingsAssignmentPayload';
+  error?: Maybe<CallingsAssignmentError>;
+  success: Scalars['Boolean']['output'];
+};
+
+export type CreateCallingInput = {
+  assignedTo?: InputMaybe<Array<Scalars['ID']['input']>>;
+  name: Scalars['String']['input'];
+  permissions?: InputMaybe<Array<Scalars['ID']['input']>>;
+};
+
+export type CreateCallingPayload = {
+  __typename?: 'CreateCallingPayload';
+  calling?: Maybe<Calling>;
+  error?: Maybe<Array<CallingCreateError>>;
+  success: Scalars['Boolean']['output'];
 };
 
 export type Credentials = {
@@ -143,9 +208,11 @@ export type LogoutPayload = {
 export type Mutation = {
   __typename?: 'Mutation';
   addCallingsToPermission: PermissionAssociateCallingsPayload;
+  assignCallingsToUser: CallingsAssignmentPayload;
   changeMyTriviaPlayerName: TriviaGamePayload;
   closeTriviaGame: TriviaGamePayload;
   createAppointment: AppointmentPayload;
+  createCalling: CreateCallingPayload;
   createPermission: PermissionPayload;
   createTriviaGame: TriviaGamePayload;
   deletePermission: PermissionDeletePayload;
@@ -154,6 +221,7 @@ export type Mutation = {
   nextTriviaQuestion: TriviaGamePayload;
   pauseTriviaGame: TriviaGamePayload;
   removeCallingsFromPermission: PermissionRemoveCallingsPayload;
+  removeCallingsFromUser: CallingsAssignmentPayload;
   requestPasswordReset: RequestPasswordResetPayload;
   resendEmailVerification: ResendEmailVerificationPayload;
   resetPassword: ResetPasswordPayload;
@@ -164,12 +232,19 @@ export type Mutation = {
   startTriviaGame: TriviaGamePayload;
   stopTriviaGame: TriviaGamePayload;
   submitTriviaAnswer: TriviaGamePayload;
+  updateCallingName: CallingPayload;
   verifyEmail: VerifyEmailPayload;
 };
 
 
 export type MutationAddCallingsToPermissionArgs = {
   input: PermissionCallings;
+};
+
+
+export type MutationAssignCallingsToUserArgs = {
+  callingIds: Array<Scalars['ID']['input']>;
+  userId: Scalars['ID']['input'];
 };
 
 
@@ -180,6 +255,11 @@ export type MutationChangeMyTriviaPlayerNameArgs = {
 
 export type MutationCreateAppointmentArgs = {
   input: AppointmentDetails;
+};
+
+
+export type MutationCreateCallingArgs = {
+  input: CreateCallingInput;
 };
 
 
@@ -205,6 +285,12 @@ export type MutationLoginArgs = {
 
 export type MutationRemoveCallingsFromPermissionArgs = {
   input: PermissionCallings;
+};
+
+
+export type MutationRemoveCallingsFromUserArgs = {
+  callingIds: Array<Scalars['ID']['input']>;
+  userId: Scalars['ID']['input'];
 };
 
 
@@ -235,6 +321,12 @@ export type MutationStartTriviaGameArgs = {
 
 export type MutationSubmitTriviaAnswerArgs = {
   answer: TriviaAnswer;
+};
+
+
+export type MutationUpdateCallingNameArgs = {
+  id: Scalars['ID']['input'];
+  name: Scalars['String']['input'];
 };
 
 
@@ -373,6 +465,7 @@ export type Query = {
   allAvailabilityBlocks: Array<AvailabilityBlock>;
   availabilityBlocks: Array<AvailabilityBlock>;
   availableTimeSlots: Array<Maybe<TimeSlot>>;
+  callingById?: Maybe<Calling>;
   callings?: Maybe<CallingConnection>;
   currentGame?: Maybe<TriviaGame>;
   myTriviaScore: Array<TriviaPlayerScore>;
@@ -390,6 +483,11 @@ export type QueryAvailabilityBlocksArgs = {
 export type QueryAvailableTimeSlotsArgs = {
   bishopricMember: Scalars['ID']['input'];
   durationInMinutes: Scalars['Int']['input'];
+};
+
+
+export type QueryCallingByIdArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -639,6 +737,7 @@ export type UserEdge = {
 };
 
 export type UserFilters = {
+  callingIsNotOneOf?: InputMaybe<Array<Scalars['ID']['input']>>;
   callingIsOneOf?: InputMaybe<Array<Scalars['ID']['input']>>;
   emailContains?: InputMaybe<Scalars['String']['input']>;
   firstNameContains?: InputMaybe<Scalars['String']['input']>;
@@ -831,6 +930,27 @@ export type MyTriviaScoreQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MyTriviaScoreQuery = { __typename?: 'Query', myTriviaScore: Array<{ __typename?: 'TriviaPlayerScore', category: string, score: number }> };
 
+export type PermissionsNotAssignedToCallingQueryVariables = Exact<{
+  input?: InputMaybe<PermissionSearch>;
+}>;
+
+
+export type PermissionsNotAssignedToCallingQuery = { __typename?: 'Query', permissions?: { __typename?: 'PermissionConnection', pageInfo: { __typename?: 'PageInfo', pageSize: number, pageOffset: number, hasNextPage: boolean, totalCount: number }, edges: Array<{ __typename?: 'PermissionEdge', node: { __typename?: 'Permission', id: string, name: string } }> } | null };
+
+export type AddCallingsToPermissionMutationVariables = Exact<{
+  input: PermissionCallings;
+}>;
+
+
+export type AddCallingsToPermissionMutation = { __typename?: 'Mutation', addCallingsToPermission: { __typename?: 'PermissionAssociateCallingsPayload', success: boolean, error?: { __typename?: 'PermissionAssociateCallingsError', code: PermissionAssociateCallingsErrorCode, message: string } | null } };
+
+export type RemoveCallingsFromPermissionMutationVariables = Exact<{
+  input: PermissionCallings;
+}>;
+
+
+export type RemoveCallingsFromPermissionMutation = { __typename?: 'Mutation', removeCallingsFromPermission: { __typename?: 'PermissionRemoveCallingsPayload', success: boolean, error?: { __typename?: 'PermissionAssociateCallingsError', code: PermissionAssociateCallingsErrorCode, message: string } | null } };
+
 export type CallingListItemFragment = { __typename?: 'Calling', id: string, name: string, assignedTo: Array<{ __typename?: 'User', id: string, firstName: string, lastName: string }> };
 
 export type CallingsSearchQueryVariables = Exact<{
@@ -839,6 +959,15 @@ export type CallingsSearchQueryVariables = Exact<{
 
 
 export type CallingsSearchQuery = { __typename?: 'Query', callings?: { __typename?: 'CallingConnection', edges: Array<{ __typename?: 'CallingEdge', node: { __typename?: 'Calling', id: string, name: string, assignedTo: Array<{ __typename?: 'User', id: string, firstName: string, lastName: string }> } }>, pageInfo: { __typename?: 'PageInfo', pageSize: number, pageOffset: number, hasNextPage: boolean, totalCount: number } } | null };
+
+export type CallingFragment = { __typename?: 'Calling', id: string, name: string, permissions: Array<{ __typename?: 'Permission', id: string, name: string }>, assignedTo: Array<{ __typename?: 'User', id: string, firstName: string, lastName: string }> };
+
+export type CallingByIdQueryVariables = Exact<{
+  callingId: Scalars['ID']['input'];
+}>;
+
+
+export type CallingByIdQuery = { __typename?: 'Query', callingById?: { __typename?: 'Calling', id: string, name: string, permissions: Array<{ __typename?: 'Permission', id: string, name: string }>, assignedTo: Array<{ __typename?: 'User', id: string, firstName: string, lastName: string }> } | null };
 
 export type AvailabilityBlocksQueryVariables = Exact<{
   durationInMinutes: Scalars['Int']['input'];
@@ -868,6 +997,31 @@ export type UsersSearchQueryVariables = Exact<{
 
 export type UsersSearchQuery = { __typename?: 'Query', users?: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, firstName: string, lastName: string, callings: Array<{ __typename?: 'Calling', id: string, name: string }> } }>, pageInfo: { __typename?: 'PageInfo', pageSize: number, pageOffset: number, hasNextPage: boolean, totalCount: number } } | null };
 
+export type UserOptionFragment = { __typename?: 'User', id: string, firstName: string, lastName: string };
+
+export type UsersNotAssignedToCallingQueryVariables = Exact<{
+  input?: InputMaybe<UserSearch>;
+}>;
+
+
+export type UsersNotAssignedToCallingQuery = { __typename?: 'Query', users?: { __typename?: 'UserConnection', pageInfo: { __typename?: 'PageInfo', pageSize: number, pageOffset: number, hasNextPage: boolean, totalCount: number }, edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, firstName: string, lastName: string } }> } | null };
+
+export type AssignCallingsToUserMutationVariables = Exact<{
+  callingIds: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  userId: Scalars['ID']['input'];
+}>;
+
+
+export type AssignCallingsToUserMutation = { __typename?: 'Mutation', assignCallingsToUser: { __typename?: 'CallingsAssignmentPayload', success: boolean, error?: { __typename?: 'CallingsAssignmentError', code: CallingsAssignmentErrorCodes, message: string } | null } };
+
+export type RemoveCallingsFromUserMutationVariables = Exact<{
+  callingIds: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  userId: Scalars['ID']['input'];
+}>;
+
+
+export type RemoveCallingsFromUserMutation = { __typename?: 'Mutation', removeCallingsFromUser: { __typename?: 'CallingsAssignmentPayload', success: boolean, error?: { __typename?: 'CallingsAssignmentError', code: CallingsAssignmentErrorCodes, message: string } | null } };
+
 export const UserDetailsFragmentDoc = gql`
     fragment UserDetails on User {
   id
@@ -892,6 +1046,15 @@ export const CallingListItemFragmentDoc = gql`
   }
 }
     `;
+export const CallingFragmentDoc = gql`
+    fragment Calling on Calling {
+  ...CallingListItem
+  permissions {
+    id
+    name
+  }
+}
+    ${CallingListItemFragmentDoc}`;
 export const UserListItemFragmentDoc = gql`
     fragment UserListItem on User {
   id
@@ -901,6 +1064,13 @@ export const UserListItemFragmentDoc = gql`
     id
     name
   }
+}
+    `;
+export const UserOptionFragmentDoc = gql`
+    fragment UserOption on User {
+  id
+  firstName
+  lastName
 }
     `;
 export const SelfDocument = gql`
@@ -1451,6 +1621,79 @@ export const MyTriviaScoreDocument = gql`
       super(apollo);
     }
   }
+export const PermissionsNotAssignedToCallingDocument = gql`
+    query PermissionsNotAssignedToCalling($input: PermissionSearch) {
+  permissions(input: $input) {
+    pageInfo {
+      pageSize
+      pageOffset
+      hasNextPage
+      totalCount
+    }
+    edges {
+      node {
+        id
+        name
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class PermissionsNotAssignedToCallingGQL extends Apollo.Query<PermissionsNotAssignedToCallingQuery, PermissionsNotAssignedToCallingQueryVariables> {
+    document = PermissionsNotAssignedToCallingDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const AddCallingsToPermissionDocument = gql`
+    mutation AddCallingsToPermission($input: PermissionCallings!) {
+  addCallingsToPermission(input: $input) {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AddCallingsToPermissionGQL extends Apollo.Mutation<AddCallingsToPermissionMutation, AddCallingsToPermissionMutationVariables> {
+    document = AddCallingsToPermissionDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const RemoveCallingsFromPermissionDocument = gql`
+    mutation RemoveCallingsFromPermission($input: PermissionCallings!) {
+  removeCallingsFromPermission(input: $input) {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class RemoveCallingsFromPermissionGQL extends Apollo.Mutation<RemoveCallingsFromPermissionMutation, RemoveCallingsFromPermissionMutationVariables> {
+    document = RemoveCallingsFromPermissionDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const CallingsSearchDocument = gql`
     query CallingsSearch($input: CallingSearch) {
   callings(input: $input) {
@@ -1474,6 +1717,24 @@ export const CallingsSearchDocument = gql`
   })
   export class CallingsSearchGQL extends Apollo.Query<CallingsSearchQuery, CallingsSearchQueryVariables> {
     document = CallingsSearchDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CallingByIdDocument = gql`
+    query CallingById($callingId: ID!) {
+  callingById(id: $callingId) {
+    ...Calling
+  }
+}
+    ${CallingFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CallingByIdGQL extends Apollo.Query<CallingByIdQuery, CallingByIdQueryVariables> {
+    document = CallingByIdDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -1570,6 +1831,78 @@ export const UsersSearchDocument = gql`
   })
   export class UsersSearchGQL extends Apollo.Query<UsersSearchQuery, UsersSearchQueryVariables> {
     document = UsersSearchDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UsersNotAssignedToCallingDocument = gql`
+    query UsersNotAssignedToCalling($input: UserSearch) {
+  users(input: $input) {
+    pageInfo {
+      pageSize
+      pageOffset
+      hasNextPage
+      totalCount
+    }
+    edges {
+      node {
+        ...UserOption
+      }
+    }
+  }
+}
+    ${UserOptionFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UsersNotAssignedToCallingGQL extends Apollo.Query<UsersNotAssignedToCallingQuery, UsersNotAssignedToCallingQueryVariables> {
+    document = UsersNotAssignedToCallingDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const AssignCallingsToUserDocument = gql`
+    mutation AssignCallingsToUser($callingIds: [ID!]!, $userId: ID!) {
+  assignCallingsToUser(callingIds: $callingIds, userId: $userId) {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AssignCallingsToUserGQL extends Apollo.Mutation<AssignCallingsToUserMutation, AssignCallingsToUserMutationVariables> {
+    document = AssignCallingsToUserDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const RemoveCallingsFromUserDocument = gql`
+    mutation RemoveCallingsFromUser($callingIds: [ID!]!, $userId: ID!) {
+  removeCallingsFromUser(callingIds: $callingIds, userId: $userId) {
+    success
+    error {
+      code
+      message
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class RemoveCallingsFromUserGQL extends Apollo.Mutation<RemoveCallingsFromUserMutation, RemoveCallingsFromUserMutationVariables> {
+    document = RemoveCallingsFromUserDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
