@@ -14,6 +14,10 @@ export const routes: Routes = [
         redirectTo: 'nav/home',
     },
     {
+        path: 'ward-camp',
+        redirectTo: 'nav/ward-camp',
+    },
+    {
         path: 'interviews',
         redirectTo: 'nav/interviews',
     },
@@ -119,6 +123,10 @@ export const routes: Routes = [
             {
                 path: 'home',
                 loadComponent: () => import('./pages/nav/home/home').then(m => m.HomePage)
+            },
+            {
+                path: 'ward-camp',
+                loadComponent: () => import('./pages/nav/ward-camp/ward-camp').then(m => m.WardCampPage)
             },
             {
                 path: 'interviews',

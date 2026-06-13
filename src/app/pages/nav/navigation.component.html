@@ -5,6 +5,7 @@
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
       <a mat-list-item (click)="drawer.close()" routerLink="home">Home</a>
+      <a mat-list-item (click)="drawer.close()" routerLink="ward-camp">Ward Camp</a>
       <!-- <a mat-list-item (click)="drawer.close()" routerLink="/christmas/trivia-game">Christmas Trivia</a> -->
       @if (authenticatedUser()?.isSiteAdmin) {
       <a mat-list-item (click)="drawer.close()" routerLink="interviews">Bishopric Interviews</a>
